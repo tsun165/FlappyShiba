@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1680837148 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\main.cpp
+	"GameLoop.h"
+
+1681047962 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.h
+	<SDL_image.h>
+	<SDL.h>
+	<iostream>
+	"TextureManager.h"
+	"Player.h"
+
+1681045411 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.cpp
+	"GameLoop.h"
+
+1680836272 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.h
+	"GameLoop.h"
+
+1680836191 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.cpp
+	"TextureManager.h"
+
+1681051831 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.h
+	<iostream>
+	"Object.h"
+
+1681052271 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	"TextureManager.h"
+
+1681045374 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.cpp
+	"Player.h"
+
+1681044991 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.cpp
+	"Object.h"
+
