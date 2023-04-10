@@ -42,6 +42,8 @@
 			<Add option="-lSDL2_mixer" />
 			<Add option="-lSDL2_ttf" />
 		</Linker>
+		<Unit filename="Background.cpp" />
+		<Unit filename="Background.h" />
 		<Unit filename="GameLoop.cpp" />
 		<Unit filename="GameLoop.h" />
 		<Unit filename="Object.cpp" />

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GameLoop.h"
+#include <SDL_image.h>
+#include <SDL.h>
 
 class TextureManager
 {

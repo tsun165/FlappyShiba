@@ -1,36 +1,43 @@
 # depslib dependency file v1.0
-1680837148 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\main.cpp
+1681143620 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\main.cpp
 	"GameLoop.h"
 
-1681047962 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.h
-	<SDL_image.h>
-	<SDL.h>
+1681114243 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.h
 	<iostream>
 	"TextureManager.h"
 	"Player.h"
+	"Background.h"
 
-1681045411 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.cpp
+1681145000 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\gameloop.cpp
 	"GameLoop.h"
 
-1680836272 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.h
-	"GameLoop.h"
+1681112772 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.h
+	<SDL_image.h>
+	<SDL.h>
 
-1680836191 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.cpp
+1681113552 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\texturemanager.cpp
 	"TextureManager.h"
+	<SDL_image.h>
 
-1681051831 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.h
+1681145000 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.h
 	<iostream>
 	"Object.h"
 
-1681052271 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.h
+1681115799 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
-	"TextureManager.h"
 
-1681045374 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.cpp
+1681144898 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\player.cpp
 	"Player.h"
 
-1681044991 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.cpp
+1681112772 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\object.cpp
 	"Object.h"
+	"TextureManager.h"
+
+1681115799 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\background.h
+	"Object.h"
+
+1681115799 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\background.cpp
+	"Background.h"
 

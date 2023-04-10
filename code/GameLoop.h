@@ -1,17 +1,18 @@
 #pragma once
 
-#include <SDL_image.h>
-#include <SDL.h>
+
 #include <iostream>
 
 #include "TextureManager.h"
 #include "Player.h"
+#include "Background.h"
 
 using namespace std;
 class GameLoop
 {
 private:
     Player p;
+    Background b;
     const int HEIGHT = 485;
     const int WIDTH = 350;
     bool GameState;

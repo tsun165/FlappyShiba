@@ -5,10 +5,6 @@ GameLoop::GameLoop()
     window = NULL;
     renderer = NULL;
     GameState = false;
-    // Source Dimension:
-    p.setSource(0,0,50,35);
-    //Destination Dimension
-    p.setDest(10,20,50,35);
 
 }
 
@@ -28,8 +24,8 @@ void GameLoop::Intialize()
         {
             cout << "Succeeded" << endl;
             GameState = true;
-            p.CreateTexture("..\\..\\res\\image\\shiba.png", renderer, p.getTexture());
-            background = TextureManager::Texture("..\\..\\res\\image\\background.png",renderer);
+            p.CreateTexture("..\\..\\res\\image\\shiba.png", renderer);
+            b.CreateTexture("..\\..\\res\\image\\background.png",renderer);
 
         }
         else
@@ -53,11 +49,17 @@ void GameLoop::Event()
     }
     if(event1.type == SDL_KEYDOWN)
     {
-        if(event1.key.keysym.sym == SDLK_UP)
-        {
-            cout << "Pressed" << endl;
-        }
 
+            p.Jump();
+            p.Jump();
+            p.Jump();
+            p.Jump();
+
+    }
+    else
+    {
+        p.Gravity();
+        SDL_Delay(1);
     }
 
 }
@@ -71,8 +73,9 @@ void GameLoop::Render()
 {
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, background, NULL, NULL);
-    p.Render(renderer, p.getTexture(), p.getSrc(), p.getDest());
+    b.Render(renderer);
+    p.Render(renderer);
+
     SDL_RenderPresent(renderer);
 }
 

@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "TextureManager.h"
 
 Object::Object()
 {
@@ -34,7 +35,7 @@ void Object::setDest(int x, int y, int w, int h)
     dest.w = w;
     dest.h = h;
 }
-void Object::CreateTexture(const char* address, SDL_Renderer* ren, SDL_Texture* Tex)
+void Object::CreateTexture(const char* address, SDL_Renderer* ren)
 {
     Tex = TextureManager::Texture(address, ren);
 
