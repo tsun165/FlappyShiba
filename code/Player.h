@@ -6,13 +6,19 @@
 
 class Player : public Object
 {
-private:
-    double gravity = 0.4;
-    double Ypos = 256;
-    double jumpHeight = -40;
+
 
 
 public:
+
+    double gravity = 0.3;
+    double Yvelocity = 0;
+    double Ypos = 256;
+    double Xpos = 25;
+    double jumpHeight = -8;
+    const int PLAYERWIDTH = 50;
+    const int PLAYERHEIGHT = 35;
+
     void Render(SDL_Renderer* ren);
     void Jump();
     bool JumpState();

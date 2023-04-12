@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "Player.h"
 #include "Background.h"
+#include "Pipe.h"
 
 using namespace std;
 class GameLoop
@@ -13,9 +14,14 @@ class GameLoop
 private:
     Player p;
     Background b;
+    Pipe piUp, piDown;
+
     const int HEIGHT = 485;
     const int WIDTH = 350;
+    int SCORE = 0;
+
     bool GameState;
+
     SDL_Event event1;
     SDL_Window* window;
     SDL_Renderer* renderer;

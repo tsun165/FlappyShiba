@@ -22,10 +22,11 @@ void GameLoop::Intialize()
         renderer = SDL_CreateRenderer(window, -1, 0);
         if(renderer)
         {
-            cout << "Succeeded" << endl;
             GameState = true;
             p.CreateTexture("..\\..\\res\\image\\shiba.png", renderer);
-            b.CreateTexture("..\\..\\res\\image\\background.png",renderer);
+            b.CreateTexture("..\\..\\res\\image\\background.png", renderer);
+            piUp.CreateTexture("..\\..\\res\\image\\pipeUp.png", renderer);
+            piDown.CreateTexture("..\\..\\res\\image\\pipeDown.png", renderer);
 
         }
         else
@@ -51,9 +52,6 @@ void GameLoop::Event()
     {
 
             p.Jump();
-            p.Jump();
-            p.Jump();
-            p.Jump();
 
     }
     else
@@ -61,7 +59,26 @@ void GameLoop::Event()
         p.Gravity();
         SDL_Delay(1);
     }
-
+    piUp.PipeMoveUp();
+    piDown.PipeMoveDown();
+    if((p.Xpos + p.PLAYERWIDTH) > piUp.Xpos && p.Xpos <(piUp.Xpos + piUp.PIPEWIDTH))
+    {
+        if(p.Ypos < piUp.PIPEHEIGHT)
+        {
+            GameState = false;
+            SCORE = piUp.SCORE + piDown.SCORE;
+            cout << SCORE;
+        }
+    }
+    if((p.Xpos + p.PLAYERWIDTH) > piDown.Xpos && p.Xpos <(piDown.Xpos + piDown.PIPEWIDTH))
+    {
+        if((p.Ypos + p.PLAYERHEIGHT) > (485 - piDown.PIPEHEIGHT))
+        {
+            GameState = false;
+            SCORE = piUp.SCORE + piDown.SCORE;
+            cout << SCORE;
+        }
+    }
 }
 
 void GameLoop::Update()
@@ -75,8 +92,12 @@ void GameLoop::Render()
 
     b.Render(renderer);
     p.Render(renderer);
+    piUp.Render(renderer);
+    piDown.Render(renderer);
 
     SDL_RenderPresent(renderer);
+
+    SDL_Delay(25);
 }
 
 void GameLoop::Clear()

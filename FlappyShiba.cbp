@@ -42,17 +42,19 @@
 			<Add option="-lSDL2_mixer" />
 			<Add option="-lSDL2_ttf" />
 		</Linker>
-		<Unit filename="Background.cpp" />
-		<Unit filename="Background.h" />
-		<Unit filename="GameLoop.cpp" />
-		<Unit filename="GameLoop.h" />
-		<Unit filename="Object.cpp" />
-		<Unit filename="Object.h" />
-		<Unit filename="Player.cpp" />
-		<Unit filename="Player.h" />
-		<Unit filename="TextureManager.cpp" />
-		<Unit filename="TextureManager.h" />
-		<Unit filename="main.cpp" />
+		<Unit filename="code/Background.cpp" />
+		<Unit filename="code/Background.h" />
+		<Unit filename="code/GameLoop.cpp" />
+		<Unit filename="code/GameLoop.h" />
+		<Unit filename="code/Object.cpp" />
+		<Unit filename="code/Object.h" />
+		<Unit filename="code/Pipe.cpp" />
+		<Unit filename="code/Pipe.h" />
+		<Unit filename="code/Player.cpp" />
+		<Unit filename="code/Player.h" />
+		<Unit filename="code/TextureManager.cpp" />
+		<Unit filename="code/TextureManager.h" />
+		<Unit filename="code/main.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

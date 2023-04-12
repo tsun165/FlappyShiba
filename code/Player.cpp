@@ -6,16 +6,14 @@ void Player::Render(SDL_Renderer* ren)
 }
 void Player::Gravity()
 {
-    Ypos += gravity;
-    setSource(0, 0, 50, 35);
-    setDest(25, Ypos, 50, 35);
+    Yvelocity += gravity;
+    Ypos += Yvelocity;
+    setSource(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
+    setDest(Xpos, Ypos, PLAYERWIDTH, PLAYERHEIGHT);
 }
 void Player::Jump()
 {
-    Ypos += jumpHeight;
-    setSource(0, 0, 50, 35);
-    setDest(25, Ypos, 50, 35);
-    SDL_Delay(25);
-
-
+    Yvelocity += jumpHeight;
+    setSource(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
+    setDest(Xpos, Ypos, PLAYERWIDTH, PLAYERHEIGHT);
 }

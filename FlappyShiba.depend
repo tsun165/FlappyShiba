@@ -41,3 +41,52 @@
 1681115799 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\background.cpp
 	"Background.h"
 
+1681115799 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\background.cpp
+	"Background.h"
+
+1681115799 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\background.h
+	"Object.h"
+
+1681274500 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\object.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+
+1681278912 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\gameloop.cpp
+	"GameLoop.h"
+
+1681279545 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\gameloop.h
+	<iostream>
+	"TextureManager.h"
+	"Player.h"
+	"Background.h"
+	"Pipe.h"
+
+1681112772 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\texturemanager.h
+	<SDL_image.h>
+	<SDL.h>
+
+1681279373 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\player.h
+	<iostream>
+	"Object.h"
+
+1681279545 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\main.cpp
+	"GameLoop.h"
+
+1681112772 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\object.cpp
+	"Object.h"
+	"TextureManager.h"
+
+1681277405 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\player.cpp
+	"Player.h"
+
+1681113552 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\texturemanager.cpp
+	"TextureManager.h"
+	<SDL_image.h>
+
+1681278920 source:c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\pipe.cpp
+	"Pipe.h"
+
+1681279373 c:\users\sondo\desktop\study\semester ii 2023\lap trinh nang cao\flappyshiba\code\pipe.h
+	"Object.h"
+
