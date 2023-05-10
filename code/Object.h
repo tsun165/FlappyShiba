@@ -10,8 +10,9 @@ class Object
 {
 private:
     SDL_Rect src, dest;
-    SDL_Texture* Tex;
+
 public:
+    SDL_Texture* Tex;
     Object();
     void setSource(int x, int y, int w, int h);
     void setDest(int x, int y, int w, int h);

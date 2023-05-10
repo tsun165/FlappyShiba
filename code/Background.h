@@ -4,6 +4,8 @@
 class Background : public Object
 {
 public:
-        void Render(SDL_Renderer* ren);
+
+
+    void Render(SDL_Renderer* ren);
 
 };
