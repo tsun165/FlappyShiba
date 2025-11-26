@@ -101,37 +101,50 @@ void GameLoop::Intialize()
     }
 }
 
-void GameLoop::Event()
+void GameLoop::HandleEvents()
 {
     SDL_PollEvent(&event1);
+    
+    // Handle quit event
     if(event1.type == SDL_QUIT)
     {
         GameState = false;
     }
-    if(event1.type == SDL_KEYDOWN && event1.key.keysym.sym == SDLK_SPACE && state == 1)
+    
+    // Handle input based on game state
+    if(event1.type == SDL_KEYDOWN && event1.key.keysym.sym == SDLK_SPACE)
     {
-            State(2);
-
-    }
-
-    if(state == 2)
-    {
-        if(event1.type == SDL_KEYDOWN && event1.key.keysym.sym == SDLK_SPACE)
+        if(state == 1)
+        {
+            State(2);  // Start game
+        }
+        else if(state == 2)
         {
             p.Jump();
             snd.PlayBreath();
         }
-        else
+        else if(state == 3)
         {
-            p.Gravity();
-            SDL_Delay(1);
+            State(1);  // Restart game
         }
+    }
+}
 
+void GameLoop::Update()
+{
+    // Only update game logic during play state
+    if(state == 2)
+    {
+        // Apply gravity if not jumping
+        p.Gravity();
+        
+        // Move pipes
         pi1Up.PipeMoveUp();
         pi1Down.PipeMoveDown();
         pi2Up.PipeMoveUp();
         pi2Down.PipeMoveDown();
 
+        // Check collision with first pipe pair
         if((p.xPos + p.PLAYERWIDTH) > pi1Up.xPos && p.xPos <(pi1Up.xPos + pi1Up.PIPEWIDTH))
         {
             if(p.yPos < pi1Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi1Down.PIPEHEIGHT + pi1Down.PIPEDISTANCE))
@@ -143,7 +156,7 @@ void GameLoop::Event()
             }
         }
 
-
+        // Check collision with second pipe pair
         if((p.xPos + p.PLAYERWIDTH) > pi2Up.xPos && p.xPos <(pi2Up.xPos + pi2Up.PIPEWIDTH))
         {
             if(p.yPos < pi2Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi2Down.PIPEHEIGHT + pi2Down.PIPEDISTANCE))
@@ -155,14 +168,6 @@ void GameLoop::Event()
             }
         }
     }
-
-    if(event1.type == SDL_KEYDOWN && event1.key.keysym.sym == SDLK_SPACE && state == 3)
-    {
-        State(1);
-    }
-
-
-
 }
 
 

@@ -7,6 +7,9 @@ int main(int argc, char* argv[])
 
     while(g->getGameState())
     {
+        g->HandleEvents();
+        g->Update();
+        
         switch(g->state)
         {
             case 1:
@@ -19,7 +22,6 @@ int main(int argc, char* argv[])
                 g->RenderEnd();
                 break;
         }
-        g->Event();
     }
     g->Clear();
     delete g;  // Clean up allocated memory

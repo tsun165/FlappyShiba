@@ -51,7 +51,8 @@ public:
     GameLoop();
     bool getGameState();
     void Intialize();
-    void Event();
+    void HandleEvents();
+    void Update();
     void RenderPlay();
     void RenderStart();
     void RenderEnd();
