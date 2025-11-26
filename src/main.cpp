@@ -1,9 +1,8 @@
 #include "GameLoop.h"
 
-GameLoop* g = new GameLoop();
-
 int main(int argc, char* argv[])
 {
+    GameLoop* g = new GameLoop();
     g->Intialize();
 
     while(g->getGameState())
@@ -23,7 +22,7 @@ int main(int argc, char* argv[])
         g->Event();
     }
     g->Clear();
-
+    delete g;  // Clean up allocated memory
 
     return 0;
 }
