@@ -4,9 +4,8 @@
 
 void Pipe::Intialize()
 {
-    xVelocity = -4;
+    xVelocity = -3.0;  // Pipe chậm hơn, đồng bộ với tốc độ rơi mới
     SCORE = 0;
-
 }
 void Pipe::Render(SDL_Renderer* ren)
 {

@@ -77,15 +77,37 @@ void GameLoop::Intialize()
             pi2Up.CreateTexture("asset\\image\\pipeUp.png", renderer);
             pi2Down.CreateTexture("asset\\image\\pipeDown.png", renderer);
 
+            // Start menu banner
             menuStart.Stay(225, 204);
             menuStart.CreateTexture("asset\\image\\message.png", renderer);
 
-
+            // Game over banner
             menuEnd.Stay(225, 188);
             menuEnd.CreateTexture("asset\\image\\gameOver.png", renderer);
 
+            // Pause tab overlay
+            menuPauseTab.Stay(250, 200);
+            menuPauseTab.CreateTexture("asset\\image\\pauseTab.png", renderer);
 
+            // Pause icon (top-right during play)
+            btnPauseIcon.CreateTexture("asset\\image\\pause.png", renderer);
+            btnPauseIcon.setSource(0, 0, 40, 40);
+            btnPauseIcon.setDest(WIDTH - 50, 10, 40, 40);
 
+            // Resume button
+            btnResume.CreateTexture("asset\\image\\resume.png", renderer);
+            btnResume.setSource(0, 0, 40, 40);
+            btnResume.setDest(105, 190, 40, 40);
+
+            // Replay button
+            btnReplay.CreateTexture("asset\\image\\replay.png", renderer);
+            btnReplay.setSource(0, 0, 40, 40);
+            btnReplay.setDest(155, 190, 40, 40);
+
+            // Sound toggle button
+            btnSound.CreateTexture("asset\\image\\sound.png", renderer);
+            btnSound.setSource(0, 0, 40, 40);
+            btnSound.setDest(205, 190, 40, 40);
         }
         else
         {
@@ -111,21 +133,80 @@ void GameLoop::HandleEvents()
         GameState = false;
     }
     
-    // Handle input based on game state
-    if(event1.type == SDL_KEYDOWN && event1.key.keysym.sym == SDLK_SPACE)
+    if(event1.type == SDL_KEYDOWN)
     {
-        if(state == 1)
+        // Space: start / jump / restart
+        if(event1.key.keysym.sym == SDLK_SPACE)
         {
-            State(2);  // Start game
+            if(state == 1)
+            {
+                State(2);  // Start game
+            }
+            else if(state == 2)
+            {
+                p.Jump();
+                snd.PlayBreath();
+            }
+            else if(state == 3)
+            {
+                State(1);  // Restart game from start screen
+            }
         }
-        else if(state == 2)
+
+        // ESC: toggle pause when playing or paused
+        if(event1.key.keysym.sym == SDLK_ESCAPE)
         {
-            p.Jump();
-            snd.PlayBreath();
+            if(state == 2)
+            {
+                state = 4; // Pause
+            }
+            else if(state == 4)
+            {
+                state = 2; // Resume
+            }
+        }
+    }
+
+    // Mouse input for menu buttons
+    if(event1.type == SDL_MOUSEBUTTONDOWN && event1.button.button == SDL_BUTTON_LEFT)
+    {
+        int mx = event1.button.x;
+        int my = event1.button.y;
+
+        // Pause icon during play
+        if(state == 2)
+        {
+            if(btnPauseIcon.IsClicked(mx, my))
+            {
+                state = 4; // Pause
+            }
+        }
+        else if(state == 4)
+        {
+            // Pause menu: resume / replay / sound
+            if(btnResume.IsClicked(mx, my))
+            {
+                state = 2;
+            }
+            else if(btnReplay.IsClicked(mx, my))
+            {
+                ResetGame();
+                state = 2;
+            }
+            else if(btnSound.IsClicked(mx, my))
+            {
+                soundOn = !soundOn;
+                Mix_Volume(-1, soundOn ? MIX_MAX_VOLUME : 0);
+            }
         }
         else if(state == 3)
         {
-            State(1);  // Restart game
+            // Game over: allow replay by clicking replay button in center
+            if(btnReplay.IsClicked(mx, my))
+            {
+                ResetGame();
+                state = 2;
+            }
         }
     }
 }
@@ -248,9 +329,54 @@ void GameLoop::RenderEnd()
     SDL_DestroyTexture(fonttex);
     SDL_FreeSurface(fontsf);
 
+    // Replay button on game over screen
+    btnReplay.Render(renderer);
+
     SDL_RenderPresent(renderer);
 
     // Cap frame rate
+    frameTime = SDL_GetTicks() - frameStart;
+    if(frameTime < FRAME_DELAY)
+    {
+        SDL_Delay(FRAME_DELAY - frameTime);
+    }
+}
+
+void GameLoop::RenderPause()
+{
+    frameStart = SDL_GetTicks();
+
+    SDL_RenderClear(renderer);
+
+    // Draw current game state (background, pipes, player)
+    b.Render(renderer);
+    p.Render(renderer);
+
+    pi1Up.Render(renderer);
+    pi1Down.Render(renderer);
+
+    pi2Up.Render(renderer);
+    pi2Down.Render(renderer);
+
+    // Draw score
+    SCORE = CalculateScore();
+    SDL_Color fg = {255, 255, 255, 255};
+    SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(SCORE).c_str(), fg);
+    SDL_Rect destPlaying = {170, 30, fontsf->w, fontsf->h};
+    SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
+    SDL_RenderCopy(renderer, fonttex, NULL, &destPlaying);
+
+    SDL_DestroyTexture(fonttex);
+    SDL_FreeSurface(fontsf);
+
+    // Pause overlay and buttons
+    menuPauseTab.Render(renderer);
+    btnResume.Render(renderer);
+    btnReplay.Render(renderer);
+    btnSound.Render(renderer);
+
+    SDL_RenderPresent(renderer);
+
     frameTime = SDL_GetTicks() - frameStart;
     if(frameTime < FRAME_DELAY)
     {

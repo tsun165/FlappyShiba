@@ -20,6 +20,11 @@ private:
     Pipe pi1Up, pi1Down, pi2Up, pi2Down;
     Sound snd;
     Menu menuStart, menuEnd;
+    Menu menuPauseTab;
+    Menu btnPauseIcon;
+    Menu btnResume;
+    Menu btnReplay;
+    Menu btnSound;
     TTF_Font* font ;
 
 
@@ -38,6 +43,7 @@ private:
     int frameTime;
 
     bool GameState;
+    bool soundOn = true;
 
     SDL_Event event1;
     SDL_Window* window;
@@ -56,6 +62,7 @@ public:
     void RenderPlay();
     void RenderStart();
     void RenderEnd();
+    void RenderPause();
     void Clear();
     void State(const short n);
     void ResetGame();

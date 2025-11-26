@@ -21,6 +21,9 @@ int main(int argc, char* argv[])
             case 3:
                 g->RenderEnd();
                 break;
+            case 4:
+                g->RenderPause();
+                break;
         }
     }
     g->Clear();

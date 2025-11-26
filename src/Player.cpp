@@ -2,13 +2,13 @@
 
 void Player::Intialize()
 {
-    // Physics constants tuned for Flappy Bird feel
-    gravity = 0.6;           // Acceleration downward per frame
-    yVelocity = 0;           // Current vertical velocity
-    maxFallSpeed = 10.0;     // Terminal velocity (prevents falling too fast)
-    jumpVelocity = -10.5;    // Upward velocity when jumping (negative = up)
+    // Physics constants tuned for Flappy Shiba feel (chậm hơn)
+    gravity = 0.45;          // Gia tốc rơi chậm hơn
+    yVelocity = 0;           // Vận tốc hiện tại
+    maxFallSpeed = 7.0;      // Giới hạn tốc độ rơi
+    jumpVelocity = -9.5;     // Nhảy yếu hơn một chút
     
-    // Starting position
+    // Vị trí bắt đầu
     yPos = 240;
     xPos = 25;
     
