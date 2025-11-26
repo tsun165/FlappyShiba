@@ -1,5 +1,7 @@
 #include "GameLoop.h"
+#include <string>
 
+using std::to_string;
 
 GameLoop::GameLoop()
 {
@@ -37,7 +39,7 @@ void GameLoop::Intialize()
     SDL_Init(SDL_INIT_EVERYTHING);
     Mix_Init(MIX_INIT_MP3);
     TTF_Init();
-    font = TTF_OpenFont("..\\res\\data\\Flappy-Bird.TTF",25);
+    font = TTF_OpenFont("asset\\font\\Flappy-Bird.TTF",25);
     if(font == NULL)
     {
         throw 1;
@@ -60,22 +62,22 @@ void GameLoop::Intialize()
         {
             GameState = true;
 
-            b.CreateTexture("..\\res\\image\\background.png", renderer);
+            b.CreateTexture("asset\\image\\background.png", renderer);
 
-            p.CreateTexture("..\\res\\image\\shiba.png", renderer);
+            p.CreateTexture("asset\\image\\shiba.png", renderer);
 
-            pi1Up.CreateTexture("..\\res\\image\\pipeUp.png", renderer);
-            pi1Down.CreateTexture("..\\res\\image\\pipeDown.png", renderer);
+            pi1Up.CreateTexture("asset\\image\\pipeUp.png", renderer);
+            pi1Down.CreateTexture("asset\\image\\pipeDown.png", renderer);
 
-            pi2Up.CreateTexture("..\\res\\image\\pipeUp.png", renderer);
-            pi2Down.CreateTexture("..\\res\\image\\pipeDown.png", renderer);
+            pi2Up.CreateTexture("asset\\image\\pipeUp.png", renderer);
+            pi2Down.CreateTexture("asset\\image\\pipeDown.png", renderer);
 
             menuStart.Stay(225, 204);
-            menuStart.CreateTexture("..\\res\\image\\message.png", renderer);
+            menuStart.CreateTexture("asset\\image\\message.png", renderer);
 
 
             menuEnd.Stay(225, 188);
-            menuEnd.CreateTexture("..\\res\\image\\gameOver.png", renderer);
+            menuEnd.CreateTexture("asset\\image\\gameOver.png", renderer);
 
 
 

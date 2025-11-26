@@ -4,8 +4,8 @@
 
 void Sound::Intialize()
 {
-    bonk = Mix_LoadWAV("..\\res\\sound\\sfx_bonk.wav");
-    breath = Mix_LoadWAV("..\\res\\sound\\sfx_breath.wav");
+    bonk = Mix_LoadWAV("asset\\sound\\sfx_bonk.wav");
+    breath = Mix_LoadWAV("asset\\sound\\sfx_breath.wav");
 }
 
 void Sound::PlayBreath()
