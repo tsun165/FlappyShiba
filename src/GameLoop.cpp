@@ -135,8 +135,8 @@ void GameLoop::Update()
     // Only update game logic during play state
     if(state == 2)
     {
-        // Apply gravity if not jumping
-        p.Gravity();
+        // Update player physics (gravity + movement)
+        p.Update();
         
         // Move pipes
         pi1Up.PipeMoveUp();
@@ -146,6 +146,15 @@ void GameLoop::Update()
 
         // Check collisions with both pipe pairs
         if(CheckPipeCollision(pi1Up, pi1Down) || CheckPipeCollision(pi2Up, pi2Down))
+        {
+            snd.PlayBonk();
+            SCORE = CalculateScore();
+            SDL_Log("Game Over! Score: %d", SCORE);
+            State(3);
+        }
+        
+        // Check ground/ceiling collision
+        if(p.yPos <= 0 || p.yPos >= 450)
         {
             snd.PlayBonk();
             SCORE = CalculateScore();

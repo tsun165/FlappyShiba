@@ -12,7 +12,8 @@ public:
     double yVelocity;
     double yPos;
     double xPos;
-    double jumpHeight;
+    double jumpVelocity;
+    double maxFallSpeed;
     const int PLAYERWIDTH = 50;
     const int PLAYERHEIGHT = 35;
 
@@ -20,7 +21,7 @@ public:
     void Render(SDL_Renderer* ren);
     void Jump();
     bool JumpState();
-    void Gravity();
+    void Update();
     void Stay();
 };
 
