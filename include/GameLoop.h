@@ -60,6 +60,7 @@ public:
     void State(const short n);
     void ResetGame();
     int CalculateScore();
+    bool CheckPipeCollision(Pipe& pipeUp, Pipe& pipeDown);
 
 
 };

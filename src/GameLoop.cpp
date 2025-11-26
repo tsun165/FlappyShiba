@@ -144,28 +144,13 @@ void GameLoop::Update()
         pi2Up.PipeMoveUp();
         pi2Down.PipeMoveDown();
 
-        // Check collision with first pipe pair
-        if((p.xPos + p.PLAYERWIDTH) > pi1Up.xPos && p.xPos <(pi1Up.xPos + pi1Up.PIPEWIDTH))
+        // Check collisions with both pipe pairs
+        if(CheckPipeCollision(pi1Up, pi1Down) || CheckPipeCollision(pi2Up, pi2Down))
         {
-            if(p.yPos < pi1Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi1Down.PIPEHEIGHT + pi1Down.PIPEDISTANCE))
-            {
-                snd.PlayBonk();
-                SCORE = CalculateScore();
-                SDL_Log("Game Over! Score: %d", SCORE);
-                State(3);
-            }
-        }
-
-        // Check collision with second pipe pair
-        if((p.xPos + p.PLAYERWIDTH) > pi2Up.xPos && p.xPos <(pi2Up.xPos + pi2Up.PIPEWIDTH))
-        {
-            if(p.yPos < pi2Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi2Down.PIPEHEIGHT + pi2Down.PIPEDISTANCE))
-            {
-                snd.PlayBonk();
-                SCORE = CalculateScore();
-                SDL_Log("Game Over! Score: %d", SCORE);
-                State(3);
-            }
+            snd.PlayBonk();
+            SCORE = CalculateScore();
+            SDL_Log("Game Over! Score: %d", SCORE);
+            State(3);
         }
     }
 }
@@ -286,6 +271,21 @@ int GameLoop::CalculateScore()
     // Each pipe pair contributes 1 point when passed
     // Since we have 2 pairs (pi1 and pi2), and each pipe adds 0.5
     return static_cast<int>(pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE);
+}
+
+bool GameLoop::CheckPipeCollision(Pipe& pipeUp, Pipe& pipeDown)
+{
+    // Check if player is horizontally aligned with pipe
+    if((p.xPos + p.PLAYERWIDTH) > pipeUp.xPos && p.xPos < (pipeUp.xPos + pipeUp.PIPEWIDTH))
+    {
+        // Check if player hits top pipe or bottom pipe
+        if(p.yPos < pipeUp.PIPEHEIGHT || 
+           (p.yPos + p.PLAYERHEIGHT) > (pipeDown.PIPEHEIGHT + pipeDown.PIPEDISTANCE))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
