@@ -178,8 +178,10 @@ void GameLoop::RenderPlay()
     SDL_Rect destPlaying = {170, 30, fontsf->w, fontsf->h};
     SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
     SDL_RenderCopy(renderer, fonttex, NULL, &destPlaying);
-
-
+    
+    // Clean up to prevent memory leak
+    SDL_DestroyTexture(fonttex);
+    SDL_FreeSurface(fontsf);
 
     SDL_RenderPresent(renderer);
 
@@ -221,6 +223,10 @@ void GameLoop::RenderEnd()
     SDL_Rect destEnd = {235, 245, fontsf->w, fontsf->h};
     SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
     SDL_RenderCopy(renderer, fonttex, NULL, &destEnd);
+    
+    // Clean up to prevent memory leak
+    SDL_DestroyTexture(fonttex);
+    SDL_FreeSurface(fontsf);
 
     SDL_RenderPresent(renderer);
 
