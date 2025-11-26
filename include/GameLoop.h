@@ -30,8 +30,12 @@ private:
 
     const int HEIGHT = 485;
     const int WIDTH = 350;
+    const int TARGET_FPS = 60;
+    const int FRAME_DELAY = 1000 / TARGET_FPS;
+    
     int SCORE = 0;
-
+    Uint32 frameStart;
+    int frameTime;
 
     bool GameState;
 

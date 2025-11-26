@@ -168,6 +168,8 @@ void GameLoop::Event()
 
 void GameLoop::RenderPlay()
 {
+    frameStart = SDL_GetTicks();
+    
     SDL_RenderClear(renderer);
 
     b.Render(renderer);
@@ -192,10 +194,16 @@ void GameLoop::RenderPlay()
 
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(25);
+    // Cap frame rate
+    frameTime = SDL_GetTicks() - frameStart;
+    if(frameTime < FRAME_DELAY)
+    {
+        SDL_Delay(FRAME_DELAY - frameTime);
+    }
 }
 void GameLoop::RenderStart()
 {
+    frameStart = SDL_GetTicks();
 
     SDL_RenderClear(renderer);
 
@@ -206,11 +214,17 @@ void GameLoop::RenderStart()
 
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(25);
-
+    // Cap frame rate
+    frameTime = SDL_GetTicks() - frameStart;
+    if(frameTime < FRAME_DELAY)
+    {
+        SDL_Delay(FRAME_DELAY - frameTime);
+    }
 }
 void GameLoop::RenderEnd()
 {
+    frameStart = SDL_GetTicks();
+    
     SDL_RenderClear(renderer);
 
     b.Render(renderer);
@@ -237,8 +251,12 @@ void GameLoop::RenderEnd()
 
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(25);
-
+    // Cap frame rate
+    frameTime = SDL_GetTicks() - frameStart;
+    if(frameTime < FRAME_DELAY)
+    {
+        SDL_Delay(FRAME_DELAY - frameTime);
+    }
 }
 
 void GameLoop::Clear()
