@@ -53,6 +53,7 @@ public:
     void RenderEnd();
     void Clear();
     void State(const short n);
+    void ResetGame();
 
 
 };

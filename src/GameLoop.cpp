@@ -7,10 +7,14 @@ GameLoop::GameLoop()
 {
     window = NULL;
     renderer = NULL;
-
     GameState = true;
     state = 1;
+    
+    ResetGame();
+}
 
+void GameLoop::ResetGame()
+{
     p.Intialize();
 
     pi1Up.Intialize();
@@ -24,8 +28,6 @@ GameLoop::GameLoop()
     pi2Up.xPos = pi2Down.xPos = 320 + 210;
     pi2Up.PIPEHEIGHT = pi2Down.PIPEHEIGHT = pi2Up.listPipeHeight[0];
     pi2Up.indexPipeHeight = pi2Down.indexPipeHeight = 3;
-
-
 }
 
 bool GameLoop::getGameState()
@@ -252,19 +254,7 @@ void GameLoop::State(const short n)
     state = n;
     if(state == 1)
     {
-        p.Intialize();
-
-        pi1Up.Intialize();
-        pi1Down.Intialize();
-        pi1Up.xPos = pi1Down.xPos = 320;
-        pi1Up.PIPEHEIGHT = pi1Down.PIPEHEIGHT = pi1Up.listPipeHeight[0];
-        pi1Up.indexPipeHeight = pi1Down.indexPipeHeight = 2;
-
-        pi2Up.Intialize();
-        pi2Down.Intialize();
-        pi2Up.xPos = pi2Down.xPos = 320 + 210;
-        pi2Up.PIPEHEIGHT = pi2Down.PIPEHEIGHT = pi2Up.listPipeHeight[0];
-        pi2Up.indexPipeHeight = pi2Down.indexPipeHeight = 3;
+        ResetGame();
     }
 }
 
