@@ -42,13 +42,16 @@ void GameLoop::Intialize()
     font = TTF_OpenFont("asset\\font\\Flappy-Bird.TTF",25);
     if(font == NULL)
     {
-        throw 1;
+        SDL_Log("Failed to load font: %s", TTF_GetError());
+        GameState = false;
+        return;
     }
 
     if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
-        cout << Mix_GetError() << endl;
-        throw 1; // EXIT THE PROGRAM
+        SDL_Log("Failed to open audio: %s", Mix_GetError());
+        GameState = false;
+        return;
     }
     snd.Intialize();
 
@@ -84,13 +87,15 @@ void GameLoop::Intialize()
         }
         else
         {
-            cout << "render not created" << endl;
+            SDL_Log("Failed to create renderer: %s", SDL_GetError());
+            GameState = false;
         }
 
     }
     else
     {
-        cout << "window not created" << endl;
+        SDL_Log("Failed to create window: %s", SDL_GetError());
+        GameState = false;
     }
 }
 

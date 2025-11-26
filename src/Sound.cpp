@@ -12,16 +12,14 @@ void Sound::PlayBreath()
 {
     if (Mix_PlayChannel(1, breath, 0) == -1)
     {
-        SDL_Log(Mix_GetError());
-        throw 1;
+        SDL_Log("Failed to play breath sound: %s", Mix_GetError());
     }
 }
 void Sound::PlayBonk()
 {
     if (Mix_PlayChannel(2, bonk, 0) == -1)
     {
-        SDL_Log(Mix_GetError());
-        throw 1;
+        SDL_Log("Failed to play bonk sound: %s", Mix_GetError());
     }
 }
 
