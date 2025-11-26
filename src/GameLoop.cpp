@@ -137,8 +137,8 @@ void GameLoop::Event()
             if(p.yPos < pi1Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi1Down.PIPEHEIGHT + pi1Down.PIPEDISTANCE))
             {
                 snd.PlayBonk();
-                SCORE = pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE;
-                cout << SCORE << endl;
+                SCORE = CalculateScore();
+                SDL_Log("Game Over! Score: %d", SCORE);
                 State(3);
             }
         }
@@ -149,8 +149,8 @@ void GameLoop::Event()
             if(p.yPos < pi2Up.PIPEHEIGHT || (p.yPos + p.PLAYERHEIGHT) > (pi2Down.PIPEHEIGHT + pi2Down.PIPEDISTANCE))
             {
                 snd.PlayBonk();
-                SCORE = pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE;
-                cout << SCORE  << endl;
+                SCORE = CalculateScore();
+                SDL_Log("Game Over! Score: %d", SCORE);
                 State(3);
             }
         }
@@ -181,7 +181,7 @@ void GameLoop::RenderPlay()
     pi2Up.Render(renderer);
     pi2Down.Render(renderer);
 
-    SCORE = pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE;
+    SCORE = CalculateScore();
     SDL_Color fg = {255, 255, 255, 255};
     SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(SCORE).c_str(), fg);
     SDL_Rect destPlaying = {170, 30, fontsf->w, fontsf->h};
@@ -238,7 +238,7 @@ void GameLoop::RenderEnd()
 
     menuEnd.Render(renderer);
 
-    SCORE = pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE;
+    SCORE = CalculateScore();
     SDL_Color fg = {255, 255, 255, 255};
     SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(SCORE).c_str(), fg);
     SDL_Rect destEnd = {235, 245, fontsf->w, fontsf->h};
@@ -274,6 +274,13 @@ void GameLoop::State(const short n)
     {
         ResetGame();
     }
+}
+
+int GameLoop::CalculateScore()
+{
+    // Each pipe pair contributes 1 point when passed
+    // Since we have 2 pairs (pi1 and pi2), and each pipe adds 0.5
+    return static_cast<int>(pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE);
 }
 
 

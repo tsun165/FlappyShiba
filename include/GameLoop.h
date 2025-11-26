@@ -58,6 +58,7 @@ public:
     void Clear();
     void State(const short n);
     void ResetGame();
+    int CalculateScore();
 
 
 };
