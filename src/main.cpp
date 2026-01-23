@@ -3,30 +3,30 @@
 int main(int argc, char* argv[])
 {
     GameLoop* g = new GameLoop();
-    g->Intialize();
+    g->initalize();
 
     while(g->getGameState())
     {
-        g->HandleEvents();
-        g->Update();
+        g->handleEvents();
+        g->update();
         
-        switch(g->state)
+        switch(g->getState())
         {
             case 1:
-                g->RenderStart();
+                g->renderStart();
                 break;
             case 2:
-                g->RenderPlay();
+                g->renderPlay();
                 break;
             case 3:
-                g->RenderEnd();
+                g->renderEnd();
                 break;
             case 4:
-                g->RenderPause();
+                g->renderPause();
                 break;
         }
     }
-    g->Clear();
+    g->clear();
     delete g;  // Clean up allocated memory
 
     return 0;
