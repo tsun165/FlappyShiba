@@ -1,6 +1,6 @@
 #pragma once
-#include "Object.h"
 
+#include "Object.h"
 
 class Menu : public Object
 {
@@ -9,8 +9,8 @@ class Menu : public Object
 public:
     int MENUWIDTH;
     int MENUHEIGHT;
-    void Render(SDL_Renderer* ren);
-    void Stay(int MENUWIDTH, int MENUHEIGHT);
-    bool IsClicked(int x, int y);
+    void render(SDL_Renderer* ren);
+    void stay(int MENUWIDTH, int MENUHEIGHT);
+    bool isClicked(int x, int y);
 
 };

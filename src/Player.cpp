@@ -8,14 +8,14 @@ void Player::Intialize()
     maxFallSpeed = 7.0;      // Giới hạn tốc độ rơi
     jumpVelocity = -9.5;     // Nhảy yếu hơn một chút
     
-    // Vị trí bắt đầu
+    // Start Position
     yPos = 240;
     xPos = 25;
     
     Stay();
 }
 
-void Player::Render(SDL_Renderer* ren)
+void Player::render(SDL_Renderer* ren)
 {
     SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest());
 }
@@ -48,7 +48,7 @@ void Player::Update()
         yVelocity = 0;
     }
     
-    setSource(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
+    setSrc(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
     setDest(xPos, yPos, PLAYERWIDTH, PLAYERHEIGHT);
 }
 
@@ -58,12 +58,12 @@ void Player::Jump()
     // This gives consistent jump height regardless of current velocity
     yVelocity = jumpVelocity;
     
-    setSource(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
+    setSrc(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
     setDest(xPos, yPos, PLAYERWIDTH, PLAYERHEIGHT);
 }
 
 void Player::Stay()
 {
-    setSource(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
+    setSrc(0, 0, PLAYERWIDTH, PLAYERHEIGHT);
     setDest(xPos, yPos, PLAYERWIDTH, PLAYERHEIGHT);
 }

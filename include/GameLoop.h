@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-
+#include <string>
 #include <SDL_ttf.h>
 
 #include "TextureManager.h"
@@ -62,22 +62,21 @@ private:
     Menu btnReplayEnd;   // replay button on game-over board
     Menu btnSound;
 
-    TTF_Font* font = nullptr;
+    TTF_Font* font;
     
+    int score = 0;
+    bool gameState, sound;
+    int state = 1;
 
     //state 1 Start
     //state 2 Playing
     //state 3 End
-    
-    int score = 0;
-    bool gameState;
-    bool soundOn = true;
-    int state = 1;
+    //state 4 Pause
 
-    Uint32 frameStart = 0;
-    int frameTime = 0;
+    Uint32 frameStart;
+    int frameTime;
 
-    SDL_Event event1;
+    SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;
 

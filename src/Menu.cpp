@@ -1,22 +1,19 @@
 #include "Menu.h"
 
 
-void Menu::Render(SDL_Renderer* ren)
+void Menu::render(SDL_Renderer* ren)
 {
-    if(SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest()) == -1)
-    {
-        SDL_Log(SDL_GetError());
-    }
-
+    SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest());
 }
-void Menu::Stay(int MENUWIDTH, int MENUHEIGHT)
+
+void Menu::stay(int MENUWIDTH, int MENUHEIGHT)
 {
-    setSource(0, 0, MENUWIDTH, MENUHEIGHT);
+    setSrc(0, 0, MENUWIDTH, MENUHEIGHT);
     setDest(62, 140, MENUWIDTH, MENUHEIGHT);
 
 }
 
-bool Menu::IsClicked(int x, int y)
+bool Menu::isClicked(int x, int y)
 {
     SDL_Rect& rect = getDest();
     return (x >= rect.x && x <= rect.x + rect.w &&

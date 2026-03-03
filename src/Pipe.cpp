@@ -1,13 +1,12 @@
 #include "Pipe.h"
 
-
-
 void Pipe::Intialize()
 {
-    xVelocity = -3.0;  // Pipe chậm hơn, đồng bộ với tốc độ rơi mới
-    SCORE = 0;
+    xVelocity = -3;  // Pipe chậm hơn, đồng bộ với tốc độ rơi mới
+    score = 0;
 }
-void Pipe::Render(SDL_Renderer* ren)
+
+void Pipe::render(SDL_Renderer* ren)
 {
     SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest());
 }
@@ -17,17 +16,17 @@ void Pipe::PipeMoveUp()
     if(xPos < -PIPEWIDTH)
     {
         xPos = 320 + PIPEWIDTH;
-        PIPEHEIGHT = listPipeHeight[int(indexPipeHeight)];
+        pipeHeight = listPipeHeight[int(indexPipeHeight)];
         if((indexPipeHeight + 2) >= 5)
             indexPipeHeight -= 3;
         else
             indexPipeHeight += 2;
 
-        SCORE += 0.5;
+        score += 0.5;
     }
     xPos += xVelocity;
-    setSource(0, 373 - PIPEHEIGHT, PIPEWIDTH, PIPEHEIGHT);
-    setDest(xPos, 0, PIPEWIDTH, PIPEHEIGHT);
+    setSrc(0, 373 - pipeHeight, PIPEWIDTH, pipeHeight);
+    setDest(xPos, 0, PIPEWIDTH, pipeHeight);
 }
 
 void Pipe::PipeMoveDown()
@@ -35,15 +34,15 @@ void Pipe::PipeMoveDown()
     if(xPos < -PIPEWIDTH)
     {
         xPos = 320 + PIPEWIDTH;
-        PIPEHEIGHT = listPipeHeight[int(indexPipeHeight)];
+        pipeHeight = listPipeHeight[int(indexPipeHeight)];
         if((indexPipeHeight +2) >= 5)
             indexPipeHeight -= 3;
         else
             indexPipeHeight += 2;
 
-        SCORE += 0.5;
+        score += 0.5;
     }
     xPos += xVelocity ;
-    setSource(0, 0, PIPEWIDTH, 485 - PIPEDISTANCE - PIPEHEIGHT);
-    setDest(xPos, PIPEHEIGHT + PIPEDISTANCE, PIPEWIDTH,485 - PIPEDISTANCE - PIPEHEIGHT);
+    setSrc(0, 0, PIPEWIDTH, 485 - PIPEDISTANCE - pipeHeight);
+    setDest(xPos, pipeHeight + PIPEDISTANCE, PIPEWIDTH,485 - PIPEDISTANCE - pipeHeight);
 }

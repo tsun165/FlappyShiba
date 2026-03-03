@@ -2,25 +2,25 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <iostream>
+#include "TextureManager.h"
 
-// #include "TextureManager.h"
-
-class Object
-{
-private:
-    SDL_Rect src, dest;
-
+class Object {
 public:
-    SDL_Texture* Tex;
+    //Constructor
     Object();
-    void setSource(int x, int y, int w, int h);
-    void setDest(int x, int y, int w, int h);
-    SDL_Texture* getTexture();
+    virtual ~Object();
+
+    //API
     SDL_Rect& getSrc();
     SDL_Rect& getDest();
-    void CreateTexture(const char* address, SDL_Renderer* ren);
-    void virtual Render(SDL_Renderer* ren) = 0;
+    SDL_Texture* getTexture();
+    void setSrc(int x, int y, int w, int h);
+    void setDest(int x, int y, int w, int h);
+    void setTexture(const char* address, SDL_Renderer* ren);
+    virtual void render(SDL_Renderer* ren);
 
+private:
+    SDL_Rect src, dest;
+    SDL_Texture* tex;
 
 };

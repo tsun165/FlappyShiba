@@ -1,6 +1,4 @@
 #include "Sound.h"
-#include <SDL.h>
-
 
 void Sound::Intialize()
 {

@@ -2,11 +2,18 @@
 
 #include "Object.h"
 
-class Player : public Object
-{
-
-
+class Player : public Object {
 public:
+    void Intialize();
+    void render(SDL_Renderer* ren);
+    void Jump();
+    //bool JumpState();
+    void Update();
+    void Stay();
+
+//private: 
+    const int PLAYERWIDTH = 50;
+    const int PLAYERHEIGHT = 35;
 
     double gravity;
     double yVelocity;
@@ -14,15 +21,7 @@ public:
     double xPos;
     double jumpVelocity;
     double maxFallSpeed;
-    const int PLAYERWIDTH = 50;
-    const int PLAYERHEIGHT = 35;
-
-    void Intialize();
-    void Render(SDL_Renderer* ren);
-    void Jump();
-    bool JumpState();
-    void Update();
-    void Stay();
+    
 };
 
 

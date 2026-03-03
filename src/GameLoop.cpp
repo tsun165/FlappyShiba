@@ -1,13 +1,18 @@
-#include "GameLoop.h"
-#include <string>
+﻿#include "GameLoop.h"
 
 // Constructor
 GameLoop::GameLoop()
 {
     window = NULL;
     renderer = NULL;
+
+    font = nullptr;
+    score = 0;
     gameState = true;
+    sound = true;
     state = 1;
+    frameStart = 0;
+    frameTime = 0;
     
     resetGame();
 }
@@ -49,46 +54,47 @@ void GameLoop::initalize()
         {
             gameState = true;
 
-            b.CreateTexture("asset\\image\\background.png", renderer);
+            b.setTexture("asset\\image\\background.png", renderer);
 
-            p.CreateTexture("asset\\image\\shiba.png", renderer);
+            p.setTexture("asset\\image\\shiba.png", renderer);
 
-            pi1Up.CreateTexture("asset\\image\\pipeUp.png", renderer);
-            pi1Down.CreateTexture("asset\\image\\pipeDown.png", renderer);
+            pi1Up.setTexture("asset\\image\\pipeUp.png", renderer);
+            pi1Down.setTexture("asset\\image\\pipeDown.png", renderer);
 
-            pi2Up.CreateTexture("asset\\image\\pipeUp.png", renderer);
-            pi2Down.CreateTexture("asset\\image\\pipeDown.png", renderer);
+            pi2Up.setTexture("asset\\image\\pipeUp.png", renderer);
+            pi2Down.setTexture("asset\\image\\pipeDown.png", renderer);
 
             // Start menu banner
-            menuStart.Stay(225, 204);
-            menuStart.CreateTexture("asset\\image\\message.png", renderer);
+            menuStart.stay(225, 204);
+            menuStart.setTexture("asset\\image\\message.png", renderer);
 
             // Game over banner
-            menuEnd.Stay(225, 188);
-            menuEnd.CreateTexture("asset\\image\\gameOver.png", renderer);
+            menuEnd.stay(225, 188);
+            menuEnd.setTexture("asset\\image\\gameOver.png", renderer);
 
             // Pause tab overlay
-            menuPauseTab.Stay(250, 200);
-            menuPauseTab.CreateTexture("asset\\image\\pauseTab.png", renderer);
+            menuPauseTab.stay(250, 200);
+            menuPauseTab.setTexture("asset\\image\\pauseTab.png", renderer);
 
             // Pause icon (top-right during play)
-            btnPauseIcon.CreateTexture("asset\\image\\pause.png", renderer);
-            btnPauseIcon.setSource(0, 0, 40, 40);
+            btnPauseIcon.setTexture("asset\\image\\pause.png", renderer);
+            btnPauseIcon.setSrc(0, 0, 40, 40);
             btnPauseIcon.setDest(WIDTH - 50, 10, 40, 40);
 
             // Resume button
-            btnResume.CreateTexture("asset\\image\\resume.png", renderer);
-            btnResume.setSource(0, 0, 40, 40);
+            btnResume.setTexture("asset\\image\\resume.png", renderer);
+            btnResume.setSrc(0, 0, 40, 40);
             btnResume.setDest(105, 190, 40, 40);
 
             // Replay button
-            btnReplay.CreateTexture("asset\\image\\replay.png", renderer);
-            btnReplay.setSource(0, 0, 40, 40);
+            btnReplay.setTexture("asset\\image\\replay.png", renderer);
+            btnReplay.setSrc(0, 0, 40, 40);
             btnReplay.setDest(155, 190, 40, 40);
 
             // Replay button for game-over screen (center-bottom of board)
-            btnReplayEnd.CreateTexture("asset\\image\\replay.png", renderer);
-            btnReplayEnd.setSource(0, 0, 40, 40);
+            btnReplayEnd.setTexture("asset\\image\\replay.png", renderer);
+            btnReplayEnd.setSrc(0, 0, 40, 40);
+
             // gameOver board is at (62,140) size (225x188)
             // place button centered horizontally, near bottom with small margin
             int endBtnX = 62 + (225 - 40) / 2;
@@ -96,8 +102,8 @@ void GameLoop::initalize()
             btnReplayEnd.setDest(endBtnX, endBtnY, 40, 40);
 
             // Sound toggle button
-            btnSound.CreateTexture("asset\\image\\sound.png", renderer);
-            btnSound.setSource(0, 0, 40, 40);
+            btnSound.setTexture("asset\\image\\sound.png", renderer);
+            btnSound.setSrc(0, 0, 40, 40);
             btnSound.setDest(205, 190, 40, 40);
         }
         else
@@ -116,18 +122,18 @@ void GameLoop::initalize()
 
 void GameLoop::handleEvents()
 {
-    SDL_PollEvent(&event1);
+    SDL_PollEvent(&event);
 
     // Handle quit event
-    if (event1.type == SDL_QUIT)
+    if (event.type == SDL_QUIT)
     {
         gameState = false;
     }
 
-    if (event1.type == SDL_KEYDOWN)
+    if (event.type == SDL_KEYDOWN)
     {
         // Space: start / jump / restart
-        if (event1.key.keysym.sym == SDLK_SPACE)
+        if (event.key.keysym.sym == SDLK_SPACE)
         {
             if (state == 1)
             {
@@ -145,7 +151,7 @@ void GameLoop::handleEvents()
         }
 
         // ESC: toggle pause when playing or paused
-        if (event1.key.keysym.sym == SDLK_ESCAPE)
+        if (event.key.keysym.sym == SDLK_LCTRL)
         {
             if (state == 2)
             {
@@ -154,20 +160,22 @@ void GameLoop::handleEvents()
             else if (state == 4)
             {
                 state = 2; // Resume
+
+                //Xử lý đếm
             }
         }
     }
 
     // Mouse input for menu buttons
-    if (event1.type == SDL_MOUSEBUTTONDOWN && event1.button.button == SDL_BUTTON_LEFT)
+    if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
     {
-        int mx = event1.button.x;
-        int my = event1.button.y;
+        int mx = event.button.x;
+        int my = event.button.y;
 
         // Pause icon during play
         if (state == 2)
         {
-            if (btnPauseIcon.IsClicked(mx, my))
+            if (btnPauseIcon.isClicked(mx, my))
             {
                 state = 4; // Pause
             }
@@ -175,25 +183,25 @@ void GameLoop::handleEvents()
         else if (state == 4)
         {
             // Pause menu: resume / replay / sound
-            if (btnResume.IsClicked(mx, my))
+            if (btnResume.isClicked(mx, my))
             {
                 state = 2;
             }
-            else if (btnReplay.IsClicked(mx, my))
+            else if (btnReplay.isClicked(mx, my))
             {
                 resetGame();
                 state = 2;
             }
-            else if (btnSound.IsClicked(mx, my))
+            else if (btnSound.isClicked(mx, my))
             {
-                soundOn = !soundOn;
-                Mix_Volume(-1, soundOn ? MIX_MAX_VOLUME : 0);
+                sound = !sound;
+                Mix_Volume(-1, sound ? MIX_MAX_VOLUME : 0);
             }
         }
         else if (state == 3)
         {
             // Game over: allow replay by clicking replay button on board
-            if (btnReplayEnd.IsClicked(mx, my))
+            if (btnReplayEnd.isClicked(mx, my))
             {
                 resetGame();
                 state = 2;
@@ -222,6 +230,7 @@ void GameLoop::update()
             snd.PlayBonk();
             score = calculateScore();
             SDL_Log("Game Over! Score: %d", score);
+            // tab hiện điểm
             setState(3);
         }
 
@@ -230,11 +239,13 @@ void GameLoop::update()
         {
             snd.PlayBonk();
             score = calculateScore();
+            //tab hiện điểm
             SDL_Log("Game Over! Score: %d", score);
             setState(3);
         }
     }
 }
+
 
 // Rendering
 void GameLoop::renderPlay()
@@ -243,14 +254,14 @@ void GameLoop::renderPlay()
 
     SDL_RenderClear(renderer);
 
-    b.Render(renderer);
-    p.Render(renderer);
+    b.render(renderer);
+    p.render(renderer);
 
-    pi1Up.Render(renderer);
-    pi1Down.Render(renderer);
+    pi1Up.render(renderer);
+    pi1Down.render(renderer);
 
-    pi2Up.Render(renderer);
-    pi2Down.Render(renderer);
+    pi2Up.render(renderer);
+    pi2Down.render(renderer);
 
     score = calculateScore();
     SDL_Color fg = { 255, 255, 255, 255 };
@@ -279,10 +290,9 @@ void GameLoop::renderStart()
 
     SDL_RenderClear(renderer);
 
-    b.Render(renderer);
-    p.Render(renderer);
-
-    menuStart.Render(renderer);
+    b.render(renderer);
+    p.render(renderer);
+    menuStart.render(renderer);
 
     SDL_RenderPresent(renderer);
 
@@ -300,16 +310,16 @@ void GameLoop::renderEnd()
 
     SDL_RenderClear(renderer);
 
-    b.Render(renderer);
-    p.Render(renderer);
+    b.render(renderer);
+    p.render(renderer);
 
-    pi1Up.Render(renderer);
-    pi1Down.Render(renderer);
+    pi1Up.render(renderer);
+    pi1Down.render(renderer);
 
-    pi2Up.Render(renderer);
-    pi2Down.Render(renderer);
+    pi2Up.render(renderer);
+    pi2Down.render(renderer);
 
-    menuEnd.Render(renderer);
+    menuEnd.render(renderer);
 
     score = calculateScore();
     SDL_Color fg = { 255, 255, 255, 255 };
@@ -323,7 +333,7 @@ void GameLoop::renderEnd()
     SDL_FreeSurface(fontsf);
 
     // Replay button on game over screen
-    btnReplayEnd.Render(renderer);
+    btnReplayEnd.render(renderer);
 
     SDL_RenderPresent(renderer);
 
@@ -342,14 +352,14 @@ void GameLoop::renderPause()
     SDL_RenderClear(renderer);
 
     // Draw current game state (background, pipes, player)
-    b.Render(renderer);
-    p.Render(renderer);
+    b.render(renderer);
+    p.render(renderer);
 
-    pi1Up.Render(renderer);
-    pi1Down.Render(renderer);
+    pi1Up.render(renderer);
+    pi1Down.render(renderer);
 
-    pi2Up.Render(renderer);
-    pi2Down.Render(renderer);
+    pi2Up.render(renderer);
+    pi2Down.render(renderer);
 
     // Draw score
     score = calculateScore();
@@ -363,10 +373,10 @@ void GameLoop::renderPause()
     SDL_FreeSurface(fontsf);
 
     // Pause overlay and buttons
-    menuPauseTab.Render(renderer);
-    btnResume.Render(renderer);
-    btnReplay.Render(renderer);
-    btnSound.Render(renderer);
+    menuPauseTab.render(renderer);
+    btnResume.render(renderer);
+    btnReplay.render(renderer);
+    btnSound.render(renderer);
 
     SDL_RenderPresent(renderer);
 
@@ -376,6 +386,7 @@ void GameLoop::renderPause()
         SDL_Delay(FRAME_DELAY - frameTime);
     }
 }
+
 
 // State control
 int GameLoop::getState()
@@ -408,22 +419,23 @@ void GameLoop::resetGame()
     pi1Up.Intialize();
     pi1Down.Intialize();
     pi1Up.xPos = pi1Down.xPos = 320;
-    pi1Up.PIPEHEIGHT = pi1Down.PIPEHEIGHT = pi1Up.listPipeHeight[0];
+    pi1Up.pipeHeight = pi1Down.pipeHeight = pi1Up.listPipeHeight[0];
     pi1Up.indexPipeHeight = pi1Down.indexPipeHeight = 2;
 
     pi2Up.Intialize();
     pi2Down.Intialize();
     pi2Up.xPos = pi2Down.xPos = 320 + 210;
-    pi2Up.PIPEHEIGHT = pi2Down.PIPEHEIGHT = pi2Up.listPipeHeight[0];
+    pi2Up.pipeHeight = pi2Down.pipeHeight = pi2Up.listPipeHeight[0];
     pi2Up.indexPipeHeight = pi2Down.indexPipeHeight = 3;
 }
+
 
 // Helpers
 int GameLoop::calculateScore()
 {
     // Each pipe pair contributes 1 point when passed
     // Since we have 2 pairs (pi1 and pi2), and each pipe adds 0.5
-    return static_cast<int>(pi1Up.SCORE + pi1Down.SCORE + pi2Up.SCORE + pi2Down.SCORE);
+    return static_cast<int>(pi1Up.score + pi1Down.score + pi2Up.score + pi2Down.score);
 }
 
 bool GameLoop::checkPipeCollision(Pipe& pipeUp, Pipe& pipeDown)
@@ -432,8 +444,8 @@ bool GameLoop::checkPipeCollision(Pipe& pipeUp, Pipe& pipeDown)
     if((p.xPos + p.PLAYERWIDTH) > pipeUp.xPos && p.xPos < (pipeUp.xPos + pipeUp.PIPEWIDTH))
     {
         // Check if player hits top pipe or bottom pipe
-        if(p.yPos < pipeUp.PIPEHEIGHT || 
-           (p.yPos + p.PLAYERHEIGHT) > (pipeDown.PIPEHEIGHT + pipeDown.PIPEDISTANCE))
+        if(p.yPos < pipeUp.pipeHeight || 
+           (p.yPos + p.PLAYERHEIGHT) > (pipeDown.pipeHeight + pipeDown.PIPEDISTANCE))
         {
             return true;
         }

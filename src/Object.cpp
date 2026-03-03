@@ -1,15 +1,20 @@
 #include "Object.h"
-#include "TextureManager.h"
 
 Object::Object()
+    : src{ 0, 0, 0, 0 },
+    dest{ 0, 0, 0, 0 },
+    tex(nullptr)
 {
-    Tex = NULL;
 }
 
-SDL_Texture* Object::getTexture()
+Object::~Object()
 {
-    return Tex;
+    if (tex != nullptr) {
+        SDL_DestroyTexture(tex);
+        tex = nullptr;
+    }
 }
+
 
 SDL_Rect& Object::getSrc()
 {
@@ -21,22 +26,32 @@ SDL_Rect& Object::getDest()
     return dest;
 }
 
-void Object::setSource(int x, int y, int w, int h)
+SDL_Texture* Object::getTexture()
 {
-    src.x = x;
-    src.y = y;
-    src.w = w;
-    src.h = h;
+    return tex;
 }
+
+void Object::setSrc(int x, int y, int w, int h)
+{
+    this->src.x = x;
+    this->src.y = y;
+    this->src.w = w;
+    this->src.h = h;
+}
+
 void Object::setDest(int x, int y, int w, int h)
 {
-    dest.x = x;
-    dest.y = y;
-    dest.w = w;
-    dest.h = h;
+    this->dest.x = x;
+    this->dest.y = y;
+    this->dest.w = w;
+    this->dest.h = h;
 }
-void Object::CreateTexture(const char* address, SDL_Renderer* ren)
-{
-    Tex = TextureManager::Texture(address, ren);
 
+void Object::setTexture(const char* address, SDL_Renderer* ren)
+{
+    tex = TextureManager::Texture(address, ren);
+}
+
+void Object::render(SDL_Renderer* ren)
+{
 }
