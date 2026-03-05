@@ -54,4 +54,6 @@ void Object::setTexture(const char* address, SDL_Renderer* ren)
 
 void Object::render(SDL_Renderer* ren)
 {
+    if (tex == nullptr) return;
+    SDL_RenderCopy(ren, tex, &src, &dest);
 }

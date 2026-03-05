@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <SDL_ttf.h>
+#include <cstdlib>
+#include <ctime>
 
 #include "TextureManager.h"
 #include "Player.h"
@@ -40,18 +42,19 @@ public:
 private:
     // Helpers
     int calculateScore();
-    bool checkPipeCollision(Pipe& pipeUp, Pipe& pipeDown);
+    bool checkPipeCollision(Pipe& pipe);  // sửa lại để nhận 1 Pipe
+    void updateScoreForPipe(int pipeIndex);        // hàm helper cộng điểm
 
     // Constants
-    const int HEIGHT = 485;
-    const int WIDTH = 350;
+    const int SCREEN_HEIGHT = 485;
+    const int SCREEN_WIDTH = 350;
     const int TARGET_FPS = 60;
     const int FRAME_DELAY = 1000 / TARGET_FPS;
 
     // Game state data
     Player p;
     Background b;
-    Pipe pi1Up, pi1Down, pi2Up, pi2Down;
+    Pipe pipes[2];
     Sound snd;
 
     Menu menuStart, menuEnd;
@@ -64,9 +67,10 @@ private:
 
     TTF_Font* font;
     
-    int score = 0;
+    int score;
+    bool canScore[2];
     bool gameState, sound;
-    int state = 1;
+    int state;
 
     //state 1 Start
     //state 2 Playing

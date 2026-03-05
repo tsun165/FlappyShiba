@@ -1,12 +1,12 @@
-﻿#include "GameLoop.h"
+#include "GameLoop.h"
 
 // Constructor
 GameLoop::GameLoop()
 {
     window = NULL;
     renderer = NULL;
-
     font = nullptr;
+
     score = 0;
     gameState = true;
     sound = true;
@@ -14,6 +14,8 @@ GameLoop::GameLoop()
     frameStart = 0;
     frameTime = 0;
     
+    srand(static_cast<unsigned>(time(NULL)));
+
     resetGame();
 }
 
@@ -44,7 +46,7 @@ void GameLoop::initalize()
     }
     snd.Intialize();
 
-    window = SDL_CreateWindow("FlappyShiba", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("FlappyShiba", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
 
     if (window)
     {
@@ -58,11 +60,10 @@ void GameLoop::initalize()
 
             p.setTexture("asset\\image\\shiba.png", renderer);
 
-            pi1Up.setTexture("asset\\image\\pipeUp.png", renderer);
-            pi1Down.setTexture("asset\\image\\pipeDown.png", renderer);
-
-            pi2Up.setTexture("asset\\image\\pipeUp.png", renderer);
-            pi2Down.setTexture("asset\\image\\pipeDown.png", renderer);
+            pipes[0].setTexture("asset\\image\\pipeUp.png", "asset\\image\\pipeDown.png", renderer);
+            pipes[0].initialize();
+            pipes[1].setTexture("asset\\image\\pipeUp.png", "asset\\image\\pipeDown.png", renderer);
+            pipes[1].initialize();
 
             // Start menu banner
             menuStart.stay(225, 204);
@@ -79,7 +80,7 @@ void GameLoop::initalize()
             // Pause icon (top-right during play)
             btnPauseIcon.setTexture("asset\\image\\pause.png", renderer);
             btnPauseIcon.setSrc(0, 0, 40, 40);
-            btnPauseIcon.setDest(WIDTH - 50, 10, 40, 40);
+            btnPauseIcon.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
             // Resume button
             btnResume.setTexture("asset\\image\\resume.png", renderer);
@@ -212,34 +213,35 @@ void GameLoop::handleEvents()
 
 void GameLoop::update()
 {
-    // Only update game logic during play state
     if (state == 2)
     {
-        // Update player physics (gravity + movement)
         p.Update();
 
-        // Move pipes
-        pi1Up.PipeMoveUp();
-        pi1Down.PipeMoveDown();
-        pi2Up.PipeMoveUp();
-        pi2Down.PipeMoveDown();
+        for (int i = 0; i < 2; ++i)
+        {
+            pipes[i].update();
 
-        // Check collisions with both pipe pairs
-        if (checkPipeCollision(pi1Up, pi1Down) || checkPipeCollision(pi2Up, pi2Down))
+            if (pipes[i].isOutOfScreen())
+            {
+                int other = 1 - i;
+                int startX = pipes[other].getX() + 210; // khoảng cách giữa 2 cặp
+                pipes[i].reset(startX);
+                canScore[i] = true; // cho phép cộng điểm lại sau khi respawn
+            }
+
+            updateScoreForPipe(i);
+        }
+
+        if (checkPipeCollision(pipes[0]) || checkPipeCollision(pipes[1]))
         {
             snd.PlayBonk();
-            score = calculateScore();
             SDL_Log("Game Over! Score: %d", score);
-            // tab hiện điểm
             setState(3);
         }
 
-        // Check ground/ceiling collision
         if (p.yPos <= 0 || p.yPos >= 450)
         {
             snd.PlayBonk();
-            score = calculateScore();
-            //tab hiện điểm
             SDL_Log("Game Over! Score: %d", score);
             setState(3);
         }
@@ -257,11 +259,8 @@ void GameLoop::renderPlay()
     b.render(renderer);
     p.render(renderer);
 
-    pi1Up.render(renderer);
-    pi1Down.render(renderer);
-
-    pi2Up.render(renderer);
-    pi2Down.render(renderer);
+    pipes[0].render(renderer);
+    pipes[1].render(renderer);
 
     score = calculateScore();
     SDL_Color fg = { 255, 255, 255, 255 };
@@ -313,11 +312,8 @@ void GameLoop::renderEnd()
     b.render(renderer);
     p.render(renderer);
 
-    pi1Up.render(renderer);
-    pi1Down.render(renderer);
-
-    pi2Up.render(renderer);
-    pi2Down.render(renderer);
+    pipes[0].render(renderer);
+    pipes[1].render(renderer);
 
     menuEnd.render(renderer);
 
@@ -355,11 +351,8 @@ void GameLoop::renderPause()
     b.render(renderer);
     p.render(renderer);
 
-    pi1Up.render(renderer);
-    pi1Down.render(renderer);
-
-    pi2Up.render(renderer);
-    pi2Down.render(renderer);
+    pipes[0].render(renderer);
+    pipes[1].render(renderer);
 
     // Draw score
     score = calculateScore();
@@ -416,17 +409,15 @@ void GameLoop::resetGame()
 {
     p.Intialize();
 
-    pi1Up.Intialize();
-    pi1Down.Intialize();
-    pi1Up.xPos = pi1Down.xPos = 320;
-    pi1Up.pipeHeight = pi1Down.pipeHeight = pi1Up.listPipeHeight[0];
-    pi1Up.indexPipeHeight = pi1Down.indexPipeHeight = 2;
+    pipes[0].initialize();
+    pipes[0].reset(320);
 
-    pi2Up.Intialize();
-    pi2Down.Intialize();
-    pi2Up.xPos = pi2Down.xPos = 320 + 210;
-    pi2Up.pipeHeight = pi2Down.pipeHeight = pi2Up.listPipeHeight[0];
-    pi2Up.indexPipeHeight = pi2Down.indexPipeHeight = 3;
+    pipes[1].initialize();
+    pipes[1].reset(320 + 210);
+
+    score = 0;
+    canScore[0] = true;
+    canScore[1] = true;
 }
 
 
@@ -435,24 +426,43 @@ int GameLoop::calculateScore()
 {
     // Each pipe pair contributes 1 point when passed
     // Since we have 2 pairs (pi1 and pi2), and each pipe adds 0.5
-    return static_cast<int>(pi1Up.score + pi1Down.score + pi2Up.score + pi2Down.score);
+    return score;
 }
 
-bool GameLoop::checkPipeCollision(Pipe& pipeUp, Pipe& pipeDown)
+bool GameLoop::checkPipeCollision(Pipe& pipe)
 {
-    // Check if player is horizontally aligned with pipe
-    if((p.xPos + p.PLAYERWIDTH) > pipeUp.xPos && p.xPos < (pipeUp.xPos + pipeUp.PIPEWIDTH))
+    int pipeX = pipe.getX();
+    int pipeRight = pipeX + Pipe::PIPEWIDTH;
+    int gapTop = pipe.getPipeHeight();
+    int gapBottom = gapTop + Pipe::GAP;
+
+    // Check trùng theo trục X
+    if ((p.xPos + p.PLAYERWIDTH) > pipeX && p.xPos < pipeRight)
     {
-        // Check if player hits top pipe or bottom pipe
-        if(p.yPos < pipeUp.pipeHeight || 
-           (p.yPos + p.PLAYERHEIGHT) > (pipeDown.pipeHeight + pipeDown.PIPEDISTANCE))
-        {
+        // Đụng ống trên
+        if (p.yPos < gapTop)
             return true;
-        }
+
+        // Đụng ống dưới
+        if ((p.yPos + p.PLAYERHEIGHT) > gapBottom)
+            return true;
     }
     return false;
 }
 
+void GameLoop::updateScoreForPipe(int pipeIndex)
+{
+    Pipe& pipe = pipes[pipeIndex];
+    if (!canScore[pipeIndex]) return;
 
+    int pipeRight = pipe.getX() + Pipe::PIPEWIDTH;
+
+    // Cộng đúng 1 lần khi player vượt qua mép phải cặp ống
+    if (p.xPos > pipeRight)
+    {
+        score++;
+        canScore[pipeIndex] = false;
+    }
+}
 
 

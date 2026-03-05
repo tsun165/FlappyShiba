@@ -17,7 +17,7 @@ public:
     void setSrc(int x, int y, int w, int h);
     void setDest(int x, int y, int w, int h);
     void setTexture(const char* address, SDL_Renderer* ren);
-    virtual void render(SDL_Renderer* ren);
+    void render(SDL_Renderer* ren);
 
 private:
     SDL_Rect src, dest;

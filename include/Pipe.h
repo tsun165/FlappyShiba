@@ -1,25 +1,33 @@
-#pragma once
+﻿#pragma once
 
+#include <cstdlib>
 #include "Object.h"
 
-class Pipe : public Object
-{
+class Pipe {
 public:
-    void Intialize();
+    static const int PIPEWIDTH = 65;
+    static const int GAP = 170;   // khoảng trống giữa 2 ống
+    static const int SCREEN_HEIGHT = 485;
+
+    void initialize();
+    void setTexture(const char* upPath, const char* downPath, SDL_Renderer* ren);
+    void reset(int startX);   // random lại chiều cao, đặt vị trí ban đầu
+    void update();            // cập nhật xPos và dest
     void render(SDL_Renderer* ren);
-    void PipeMoveUp();
-    void PipeMoveDown();
+    int  getX()         const { return xPos; }
+    int  getPipeHeight()const { return pipeHeight; }
 
-//private:
+    bool isOutOfScreen() const { return xPos < -PIPEWIDTH; }
 
-    const int PIPEWIDTH = 65;
-    const int PIPEDISTANCE = 150;
-    const int listPipeHeight[5] = {160, 70, 190, 290, 230};
+    // cho GameLoop truy cập nếu cần
+    int  minHeight = 140;
+    int  maxHeight = 210;
 
-    int xVelocity;
+private:
+    Object up;
+    Object down;
+
     int xPos;
-    int indexPipeHeight;
-    int score;
     int pipeHeight;
-
+    int xVelocity;
 };
