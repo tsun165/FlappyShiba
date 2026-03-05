@@ -73,9 +73,7 @@ void GameLoop::initalize()
             menuStart.stay(225, 204);
             menuStart.setTexture("asset\\image\\message.png", renderer);
 
-            // Game over banner
-            menuEnd.stay(225, 188);
-            menuEnd.setTexture("asset\\image\\gameOver.png", renderer);
+            
 
             // Pause tab overlay
             menuPauseTab.stay(250, 200);
@@ -94,7 +92,7 @@ void GameLoop::initalize()
             // Replay button
             btnReplay.setTexture("asset\\image\\replay.png", renderer);
             btnReplay.setSrc(0, 0, 40, 40);
-            btnReplay.setDest(155, 190, 40, 40);
+            btnReplay.setDest(155, 190, 30, 30);
 
             // Replay button for game-over screen (center-bottom of board)
             btnReplayEnd.setTexture("asset\\image\\replay.png", renderer);
@@ -106,10 +104,14 @@ void GameLoop::initalize()
             int endBtnY = 140 + 188 - 40 - 10;
             btnReplayEnd.setDest(endBtnX, endBtnY, 40, 40);
 
+            // Game over banner
+            menuEnd.stay(225, 188);
+            menuEnd.setTexture("asset\\image\\gameOver.png", renderer);
+
             // Sound toggle button
             btnSound.setTexture("asset\\image\\sound.png", renderer);
-            btnSound.setSrc(0, 0, 40, 40);
-            btnSound.setDest(205, 190, 40, 40);
+            btnSound.setSrc(0, 0, 32, 48);
+            btnSound.setDest(115, 195, 32, 48);
 
             // Load ảnh số 0-9 (small và large)
             for (int i = 0; i < 10; i++) {
@@ -252,14 +254,12 @@ void GameLoop::update()
         if (checkPipeCollision(pipes[0]) || checkPipeCollision(pipes[1]))
         {
             snd.PlayBonk();
-            SDL_Log("Game Over! Score: %d", score);
             setState(3);
         }
 
-        if (p.yPos <= 0 || p.yPos >= 450)
+        if (p.yPos <= 0 || p.yPos >= SCREEN_HEIGHT)
         {
             snd.PlayBonk();
-            SDL_Log("Game Over! Score: %d", score);
             setState(3);
         }
     }
@@ -324,14 +324,24 @@ void GameLoop::renderPause()
     pipes[0].render(renderer);
     pipes[1].render(renderer);
 
-    score = calculateScore();
-    renderScore(score, SCREEN_WIDTH / 2, 30, true);
-
     // Pause overlay and buttons
     menuPauseTab.render(renderer);
-    btnResume.render(renderer);
-    btnReplay.render(renderer);
+    //btnResume.render(renderer);
+    //btnReplay.render(renderer);
     btnSound.render(renderer);
+
+    score = calculateScore();
+    int bestScore = 0;
+    {
+        std::ifstream fin("asset\\data\\bestScore.txt");
+        if (fin.good()) {
+            fin >> bestScore;
+        }
+        fin.close();
+    }
+
+    renderScore(score, 265, 200, false);
+    renderScore(bestScore, 265, 275, false);
 
     SDL_RenderPresent(renderer);
 
