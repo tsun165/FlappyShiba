@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <SDL_ttf.h>
 #include <cstdlib>
@@ -27,10 +28,10 @@ public:
     void update();
 
     // Rendering
-    void renderPlay();
     void renderStart();
-    void renderEnd();
+    void renderPlay();
     void renderPause();
+    void renderEnd();
 
     // State control
     int getState();
@@ -42,14 +43,18 @@ public:
 private:
     // Helpers
     int calculateScore();
-    bool checkPipeCollision(Pipe& pipe);  // sửa lại để nhận 1 Pipe
-    void updateScoreForPipe(int pipeIndex);        // hàm helper cộng điểm
+    bool checkPipeCollision(Pipe& pipe);
+    void updateScoreForPipe(int pipeIndex);
+    // Vẽ điểm bằng ảnh số
+    void renderScore(int value, int centerX, int y, bool useLarge);
+    //Vẽ huy chương
+    void renderMedal(int score);
 
     // Constants
-    const int SCREEN_HEIGHT = 485;
-    const int SCREEN_WIDTH = 350;
-    const int TARGET_FPS = 60;
-    const int FRAME_DELAY = 1000 / TARGET_FPS;
+    static const int SCREEN_HEIGHT = 485;
+    static const int SCREEN_WIDTH = 350;
+    static const int TARGET_FPS = 60;
+    static const int FRAME_DELAY = 1000 / TARGET_FPS;
 
     // Game state data
     Player p;
@@ -66,6 +71,14 @@ private:
     Menu btnSound;
 
     TTF_Font* font;
+
+    // Ảnh số 0-9: small (khi chơi/pause), large (game over)
+    SDL_Texture* digitSmall[10];
+    SDL_Texture* digitLarge[10];
+    static const int DIGIT_W_SMALL = 16;   // chiều rộng 1 số small (chỉnh theo ảnh của bạn)
+    static const int DIGIT_H_SMALL = 24;   // chiều cao
+    static const int DIGIT_W_LARGE = 32;   // large
+    static const int DIGIT_H_LARGE = 48;
     
     int score;
     bool canScore[2];
@@ -86,5 +99,10 @@ private:
 
     SDL_Texture* player;
     SDL_Texture* background;
+
+    // Medal cho màn game over
+    SDL_Texture* medalBronze;
+    SDL_Texture* medalSilver;
+    SDL_Texture* medalGold;
 
 };

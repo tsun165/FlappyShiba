@@ -6,6 +6,10 @@ GameLoop::GameLoop()
     window = NULL;
     renderer = NULL;
     font = nullptr;
+    for (int i = 0; i < 10; i++) {
+        digitSmall[i] = nullptr;
+        digitLarge[i] = nullptr;
+    }
 
     score = 0;
     gameState = true;
@@ -106,6 +110,19 @@ void GameLoop::initalize()
             btnSound.setTexture("asset\\image\\sound.png", renderer);
             btnSound.setSrc(0, 0, 40, 40);
             btnSound.setDest(205, 190, 40, 40);
+
+            // Load ảnh số 0-9 (small và large)
+            for (int i = 0; i < 10; i++) {
+                string pathSmall = "asset\\number\\small\\" + to_string(i) + ".png";
+                string pathLarge = "asset\\number\\large\\" + to_string(i) + ".png";
+                digitSmall[i] = TextureManager::Texture(pathSmall.c_str(), renderer);
+                digitLarge[i] = TextureManager::Texture(pathLarge.c_str(), renderer);
+            }
+
+            //Medal
+            medalBronze = TextureManager::Texture("asset\\medal\\honor.png", renderer);
+            medalSilver = TextureManager::Texture("asset\\medal\\silver.png", renderer);
+            medalGold = TextureManager::Texture("asset\\medal\\gold.png", renderer);
         }
         else
         {
@@ -250,39 +267,6 @@ void GameLoop::update()
 
 
 // Rendering
-void GameLoop::renderPlay()
-{
-    frameStart = SDL_GetTicks();
-
-    SDL_RenderClear(renderer);
-
-    b.render(renderer);
-    p.render(renderer);
-
-    pipes[0].render(renderer);
-    pipes[1].render(renderer);
-
-    score = calculateScore();
-    SDL_Color fg = { 255, 255, 255, 255 };
-    SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(score).c_str(), fg);
-    SDL_Rect destPlaying = { 170, 30, fontsf->w, fontsf->h };
-    SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
-    SDL_RenderCopy(renderer, fonttex, NULL, &destPlaying);
-
-    // Clean up to prevent memory leak
-    SDL_DestroyTexture(fonttex);
-    SDL_FreeSurface(fontsf);
-
-    SDL_RenderPresent(renderer);
-
-    // Cap frame rate
-    frameTime = SDL_GetTicks() - frameStart;
-    if (frameTime < FRAME_DELAY)
-    {
-        SDL_Delay(FRAME_DELAY - frameTime);
-    }
-}
-
 void GameLoop::renderStart()
 {
     frameStart = SDL_GetTicks();
@@ -303,7 +287,7 @@ void GameLoop::renderStart()
     }
 }
 
-void GameLoop::renderEnd()
+void GameLoop::renderPlay()
 {
     frameStart = SDL_GetTicks();
 
@@ -315,25 +299,11 @@ void GameLoop::renderEnd()
     pipes[0].render(renderer);
     pipes[1].render(renderer);
 
-    menuEnd.render(renderer);
-
     score = calculateScore();
-    SDL_Color fg = { 255, 255, 255, 255 };
-    SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(score).c_str(), fg);
-    SDL_Rect destEnd = { 235, 245, fontsf->w, fontsf->h };
-    SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
-    SDL_RenderCopy(renderer, fonttex, NULL, &destEnd);
-
-    // Clean up to prevent memory leak
-    SDL_DestroyTexture(fonttex);
-    SDL_FreeSurface(fontsf);
-
-    // Replay button on game over screen
-    btnReplayEnd.render(renderer);
+    renderScore(score, SCREEN_WIDTH / 2, 30, true);
 
     SDL_RenderPresent(renderer);
 
-    // Cap frame rate
     frameTime = SDL_GetTicks() - frameStart;
     if (frameTime < FRAME_DELAY)
     {
@@ -354,16 +324,8 @@ void GameLoop::renderPause()
     pipes[0].render(renderer);
     pipes[1].render(renderer);
 
-    // Draw score
     score = calculateScore();
-    SDL_Color fg = { 255, 255, 255, 255 };
-    SDL_Surface* fontsf = TTF_RenderText_Solid(font, to_string(score).c_str(), fg);
-    SDL_Rect destPlaying = { 170, 30, fontsf->w, fontsf->h };
-    SDL_Texture* fonttex = SDL_CreateTextureFromSurface(renderer, fontsf);
-    SDL_RenderCopy(renderer, fonttex, NULL, &destPlaying);
-
-    SDL_DestroyTexture(fonttex);
-    SDL_FreeSurface(fontsf);
+    renderScore(score, SCREEN_WIDTH / 2, 30, true);
 
     // Pause overlay and buttons
     menuPauseTab.render(renderer);
@@ -380,6 +342,56 @@ void GameLoop::renderPause()
     }
 }
 
+void GameLoop::renderEnd()
+{
+    frameStart = SDL_GetTicks();
+
+    SDL_RenderClear(renderer);
+
+    b.render(renderer);
+    //p.setTexture("asset\\image\\shiba-dark.png", renderer);
+    p.render(renderer);
+
+    pipes[0].render(renderer);
+    pipes[1].render(renderer);
+
+    menuEnd.render(renderer);
+
+    score = calculateScore();
+    int bestScore = 0;
+    {
+        std::ifstream fin("asset\\data\\bestScore.txt");
+        if (fin.good()) {
+            fin >> bestScore;
+        }
+        fin.close();
+    }
+
+    if (score > bestScore) {
+        bestScore = score;
+        std::ofstream fout("asset\\data\\bestScore.txt", std::ios::trunc);
+        fout << bestScore;
+        fout.close();
+    }
+
+    renderScore(score, 255, 245, false);
+    renderScore(bestScore, 255, 290, false);
+    renderMedal(score);
+
+    // Replay button on game over screen
+    //btnReplayEnd.render(renderer);
+
+    SDL_RenderPresent(renderer);
+
+    // Cap frame rate
+    frameTime = SDL_GetTicks() - frameStart;
+    if (frameTime < FRAME_DELAY)
+    {
+        SDL_Delay(FRAME_DELAY - frameTime);
+    }
+}
+
+
 
 // State control
 int GameLoop::getState()
@@ -389,6 +401,14 @@ int GameLoop::getState()
 
 void GameLoop::clear()
 {
+    for (int i = 0; i < 10; i++) {
+        if (digitSmall[i]) { SDL_DestroyTexture(digitSmall[i]); digitSmall[i] = nullptr; }
+        if (digitLarge[i]) { SDL_DestroyTexture(digitLarge[i]); digitLarge[i] = nullptr; }
+    }
+    if (medalBronze) { SDL_DestroyTexture(medalBronze); medalBronze = nullptr; }
+    if (medalSilver) { SDL_DestroyTexture(medalSilver); medalSilver = nullptr; }
+    if (medalGold) { SDL_DestroyTexture(medalGold);   medalGold = nullptr; }
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     Mix_CloseAudio();
@@ -448,6 +468,42 @@ bool GameLoop::checkPipeCollision(Pipe& pipe)
             return true;
     }
     return false;
+}
+
+void GameLoop::renderScore(int value, int centerX, int y, bool useLarge)
+{
+    SDL_Texture** digits = useLarge ? digitLarge : digitSmall;
+    int w = useLarge ? DIGIT_W_LARGE : DIGIT_W_SMALL;
+    int h = useLarge ? DIGIT_H_LARGE : DIGIT_H_SMALL;
+
+    string s = to_string(value);
+    int totalW = (int)s.length() * w;
+    int startX = centerX - totalW / 2;
+
+    for (size_t i = 0; i < s.length(); i++) {
+        int idx = s[i] - '0';
+        if (idx < 0 || idx > 9 || digits[idx] == nullptr) continue;
+
+        SDL_Rect dest = { startX + (int)i * w, y, w, h };
+        SDL_RenderCopy(renderer, digits[idx], NULL, &dest);
+    }
+}
+
+void GameLoop::renderMedal(int score)
+{
+    SDL_Texture* medal = nullptr;
+    if (score <= 2) {
+        medal = medalBronze;
+    }
+    else if (score <= 4) {
+        medal = medalSilver;
+    }
+    else {
+        medal = medalGold;
+    }
+
+    SDL_Rect dest = { 85, 250, 48, 48 };
+    SDL_RenderCopy(renderer, medal, NULL, &dest);
 }
 
 void GameLoop::updateScoreForPipe(int pipeIndex)
