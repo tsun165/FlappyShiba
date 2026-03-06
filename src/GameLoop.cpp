@@ -71,42 +71,25 @@ void GameLoop::initalize()
 
             // Start menu banner
             menuStart.stay(225, 204);
-            menuStart.setTexture("asset\\image\\message.png", renderer);
+            menuStart.setTexture("asset\\image\\message.png", renderer);    
 
-            
+            // Game over banner
+            menuEnd.stay(225, 188);
+            menuEnd.setTexture("asset\\image\\gameOver.png", renderer);
 
             // Pause tab overlay
             menuPauseTab.stay(250, 200);
             menuPauseTab.setTexture("asset\\image\\pauseTab.png", renderer);
 
             // Pause icon (top-right during play)
-            btnPauseIcon.setTexture("asset\\image\\pause.png", renderer);
-            btnPauseIcon.setSrc(0, 0, 40, 40);
-            btnPauseIcon.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
+            btnPause.setTexture("asset\\image\\pause.png", renderer);
+            btnPause.setSrc(0, 0, 40, 40);
+            btnPause.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
             // Resume button
             btnResume.setTexture("asset\\image\\resume.png", renderer);
             btnResume.setSrc(0, 0, 40, 40);
-            btnResume.setDest(105, 190, 40, 40);
-
-            // Replay button
-            btnReplay.setTexture("asset\\image\\replay.png", renderer);
-            btnReplay.setSrc(0, 0, 40, 40);
-            btnReplay.setDest(155, 190, 30, 30);
-
-            // Replay button for game-over screen (center-bottom of board)
-            btnReplayEnd.setTexture("asset\\image\\replay.png", renderer);
-            btnReplayEnd.setSrc(0, 0, 40, 40);
-
-            // gameOver board is at (62,140) size (225x188)
-            // place button centered horizontally, near bottom with small margin
-            int endBtnX = 62 + (225 - 40) / 2;
-            int endBtnY = 140 + 188 - 40 - 10;
-            btnReplayEnd.setDest(endBtnX, endBtnY, 40, 40);
-
-            // Game over banner
-            menuEnd.stay(225, 188);
-            menuEnd.setTexture("asset\\image\\gameOver.png", renderer);
+            btnResume.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
             // Sound toggle button
             btnSound.setTexture("asset\\image\\sound.png", renderer);
@@ -187,47 +170,47 @@ void GameLoop::handleEvents()
     }
 
     // Mouse input for menu buttons
-    if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-    {
-        int mx = event.button.x;
-        int my = event.button.y;
+    //if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+    //{
+    //    int mx = event.button.x;
+    //    int my = event.button.y;
 
-        // Pause icon during play
-        if (state == 2)
-        {
-            if (btnPauseIcon.isClicked(mx, my))
-            {
-                state = 4; // Pause
-            }
-        }
-        else if (state == 4)
-        {
-            // Pause menu: resume / replay / sound
-            if (btnResume.isClicked(mx, my))
-            {
-                state = 2;
-            }
-            else if (btnReplay.isClicked(mx, my))
-            {
-                resetGame();
-                state = 2;
-            }
-            else if (btnSound.isClicked(mx, my))
-            {
-                sound = !sound;
-                Mix_Volume(-1, sound ? MIX_MAX_VOLUME : 0);
-            }
-        }
-        else if (state == 3)
-        {
-            // Game over: allow replay by clicking replay button on board
-            if (btnReplayEnd.isClicked(mx, my))
-            {
-                resetGame();
-                state = 2;
-            }
-        }
-    }
+    //    // Pause icon during play
+    //    if (state == 2)
+    //    {
+    //        if (btnPauseIcon.isClicked(mx, my))
+    //        {
+    //            state = 4; // Pause
+    //        }
+    //    }
+    //    else if (state == 4)
+    //    {
+    //        // Pause menu: resume / replay / sound
+    //        if (btnResume.isClicked(mx, my))
+    //        {
+    //            state = 2;
+    //        }
+    //        else if (btnReplay.isClicked(mx, my))
+    //        {
+    //            resetGame();
+    //            state = 2;
+    //        }
+    //        else if (btnSound.isClicked(mx, my))
+    //        {
+    //            sound = !sound;
+    //            Mix_Volume(-1, sound ? MIX_MAX_VOLUME : 0);
+    //        }
+    //    }
+    //    else if (state == 3)
+    //    {
+    //        // Game over: allow replay by clicking replay button on board
+    //        if (btnReplayEnd.isClicked(mx, my))
+    //        {
+    //            resetGame();
+    //            state = 2;
+    //        }
+    //    }
+    //}
 }
 
 void GameLoop::update()
@@ -302,6 +285,7 @@ void GameLoop::renderPlay()
     score = calculateScore();
     renderScore(score, SCREEN_WIDTH / 2, 30, true);
 
+    btnPause.render(renderer);
     SDL_RenderPresent(renderer);
 
     frameTime = SDL_GetTicks() - frameStart;
@@ -326,8 +310,7 @@ void GameLoop::renderPause()
 
     // Pause overlay and buttons
     menuPauseTab.render(renderer);
-    //btnResume.render(renderer);
-    //btnReplay.render(renderer);
+    btnResume.render(renderer);
     btnSound.render(renderer);
 
     score = calculateScore();
@@ -384,8 +367,8 @@ void GameLoop::renderEnd()
         fout.close();
     }
 
-    renderScore(score, 255, 245, false);
-    renderScore(bestScore, 255, 290, false);
+    renderScore(score, 245, 245, false);
+    renderScore(bestScore, 245, 290, false);
     renderMedal(score);
 
     // Replay button on game over screen

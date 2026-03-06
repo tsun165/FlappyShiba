@@ -64,10 +64,8 @@ private:
 
     Menu menuStart, menuEnd;
     Menu menuPauseTab;
-    Menu btnPauseIcon;
+    Menu btnPause;
     Menu btnResume;
-    Menu btnReplay;      // replay button in pause menu
-    Menu btnReplayEnd;   // replay button on game-over board
     Menu btnSound;
 
     TTF_Font* font;
