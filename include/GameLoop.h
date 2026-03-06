@@ -66,7 +66,7 @@ private:
     Menu menuPauseTab;
     Menu iconPause;
     Menu iconResume;
-    Menu iconSound;
+    Menu iconSoundOn, iconSoundOff;
 
     TTF_Font* font;
 
@@ -94,9 +94,6 @@ private:
     SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;
-
-    SDL_Texture* player;
-    SDL_Texture* background;
 
     // Medal cho màn game over
     SDL_Texture* medalBronze;

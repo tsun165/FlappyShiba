@@ -87,15 +87,18 @@ void GameLoop::initalize()
             iconPause.setSrc(0, 0, 40, 40);
             iconPause.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
-            // Resume button
+            // Resume icon
             iconResume.setTexture("asset\\image\\resume.png", renderer);
             iconResume.setSrc(0, 0, 40, 40);
             iconResume.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
-            // Sound toggle button
-            iconSound.setTexture("asset\\image\\sound.png", renderer);
-            iconSound.setSrc(0, 0, 32, 48);
-            iconSound.setDest(115, 195, 32, 48);
+            // Sound icon
+            iconSoundOn.setTexture("asset\\image\\sound.png", renderer);
+            iconSoundOn.setSrc(0, 0, 32, 24);
+            iconSoundOn.setDest(115, 205, 32, 24);
+            iconSoundOff.setTexture("asset\\image\\sound.png", renderer);
+            iconSoundOff.setSrc(0, 24, 32, 24);
+            iconSoundOff.setDest(115, 205, 32, 24);
 
             // Load ảnh số 0-9 (small và large)
             for (int i = 0; i < 10; i++) {
@@ -146,7 +149,11 @@ void GameLoop::handleEvents()
             else if (state == 2)
             {
                 p.Jump();
-                snd.PlayBreath();
+                if (sound == true)
+                {
+                    snd.PlayBreath();
+                }
+                
             }
             else if (state == 3)
             {
@@ -168,23 +175,16 @@ void GameLoop::handleEvents()
                 //Xử lý đếm
             }
         }
+        if (state == 4 && event.key.keysym.sym == SDLK_s) { sound = !sound;}
     }
 
-    // Mouse input for menu buttons
+    //// Mouse input for menu buttons
     //if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
     //{
     //    int mx = event.button.x;
     //    int my = event.button.y;
 
-    //    // Pause icon during play
-    //    if (state == 2)
-    //    {
-    //        if (iconPauseIcon.isClicked(mx, my))
-    //        {
-    //            state = 4; // Pause
-    //        }
-    //    }
-    //    else if (state == 4)
+    //    if (state == 4)
     //    {
     //        // Pause menu: resume / replay / sound
     //        if (iconResume.isClicked(mx, my))
@@ -200,15 +200,6 @@ void GameLoop::handleEvents()
     //        {
     //            sound = !sound;
     //            Mix_Volume(-1, sound ? MIX_MAX_VOLUME : 0);
-    //        }
-    //    }
-    //    else if (state == 3)
-    //    {
-    //        // Game over: allow replay by clicking replay button on board
-    //        if (iconReplayEnd.isClicked(mx, my))
-    //        {
-    //            resetGame();
-    //            state = 2;
     //        }
     //    }
     //}
@@ -237,13 +228,19 @@ void GameLoop::update()
 
         if (checkPipeCollision(pipes[0]) || checkPipeCollision(pipes[1]))
         {
-            snd.PlayBonk();
+            if (sound == true)
+            {
+                snd.PlayBonk();
+            }
             setState(3);
         }
 
         if (p.yPos <= 0 || p.yPos >= SCREEN_HEIGHT)
         {
-            snd.PlayBonk();
+            if (sound == true)
+            {
+                snd.PlayBonk();
+            }
             setState(3);
         }
     }
@@ -327,7 +324,13 @@ void GameLoop::renderPause()
     // Pause overlay and buttons
     menuPauseTab.render(renderer);
     iconResume.render(renderer);
-    iconSound.render(renderer);
+    if (sound == true) 
+    {
+        iconSoundOn.render(renderer);
+    }
+    else {
+        iconSoundOff.render(renderer);
+    }
 
     int bestScore = 0;
     {
@@ -531,7 +534,10 @@ void GameLoop::updateScoreForPipe(int pipeIndex)
     if (p.xPos > pipeRight)
     {
         score++;
-        snd.PlayPlus();
+        if (sound == true)
+        {
+            snd.PlayPlus();
+        }
         canScore[pipeIndex] = false;
     }
 }
