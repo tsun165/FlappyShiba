@@ -9,8 +9,10 @@ public:
     void Intialize();
     void PlayBreath();
     void PlayBonk();
+    void PlayPlus();
 
 private:
     Mix_Chunk* bonk;
     Mix_Chunk* breath;
+    Mix_Chunk* plus;
 };

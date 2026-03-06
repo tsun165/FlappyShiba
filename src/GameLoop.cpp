@@ -531,6 +531,7 @@ void GameLoop::updateScoreForPipe(int pipeIndex)
     if (p.xPos > pipeRight)
     {
         score++;
+        snd.PlayPlus();
         canScore[pipeIndex] = false;
     }
 }
