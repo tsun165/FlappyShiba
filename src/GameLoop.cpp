@@ -48,7 +48,7 @@ void GameLoop::initalize()
         gameState = false;
         return;
     }
-    snd.Intialize();
+    snd.intialize();
 
     window = SDL_CreateWindow("FlappyShiba", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
 
@@ -151,7 +151,7 @@ void GameLoop::handleEvents()
                 p.Jump();
                 if (sound == true)
                 {
-                    snd.PlayBreath();
+                    snd.playBreath();
                 }
                 
             }
@@ -230,7 +230,7 @@ void GameLoop::update()
         {
             if (sound == true)
             {
-                snd.PlayBonk();
+                snd.playBonk();
             }
             setState(3);
         }
@@ -239,7 +239,7 @@ void GameLoop::update()
         {
             if (sound == true)
             {
-                snd.PlayBonk();
+                snd.playBonk();
             }
             setState(3);
         }
@@ -536,7 +536,7 @@ void GameLoop::updateScoreForPipe(int pipeIndex)
         score++;
         if (sound == true)
         {
-            snd.PlayPlus();
+            snd.playPlus();
         }
         canScore[pipeIndex] = false;
     }

@@ -6,10 +6,10 @@
 class Sound
 {
 public:
-    void Intialize();
-    void PlayBreath();
-    void PlayBonk();
-    void PlayPlus();
+    void intialize();
+    void playBreath();
+    void playBonk();
+    void playPlus();
 
 private:
     Mix_Chunk* bonk;
