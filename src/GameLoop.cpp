@@ -61,6 +61,7 @@ void GameLoop::initalize()
             gameState = true;
 
             b.setTexture("asset\\image\\background.png", renderer);
+            bNight.setTexture("asset\\image\\background-night.png", renderer);
 
             p.setTexture("asset\\image\\shiba.png", renderer);
 
@@ -82,19 +83,19 @@ void GameLoop::initalize()
             menuPauseTab.setTexture("asset\\image\\pauseTab.png", renderer);
 
             // Pause icon (top-right during play)
-            btnPause.setTexture("asset\\image\\pause.png", renderer);
-            btnPause.setSrc(0, 0, 40, 40);
-            btnPause.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
+            iconPause.setTexture("asset\\image\\pause.png", renderer);
+            iconPause.setSrc(0, 0, 40, 40);
+            iconPause.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
             // Resume button
-            btnResume.setTexture("asset\\image\\resume.png", renderer);
-            btnResume.setSrc(0, 0, 40, 40);
-            btnResume.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
+            iconResume.setTexture("asset\\image\\resume.png", renderer);
+            iconResume.setSrc(0, 0, 40, 40);
+            iconResume.setDest(SCREEN_WIDTH - 50, 10, 40, 40);
 
             // Sound toggle button
-            btnSound.setTexture("asset\\image\\sound.png", renderer);
-            btnSound.setSrc(0, 0, 32, 48);
-            btnSound.setDest(115, 195, 32, 48);
+            iconSound.setTexture("asset\\image\\sound.png", renderer);
+            iconSound.setSrc(0, 0, 32, 48);
+            iconSound.setDest(115, 195, 32, 48);
 
             // Load ảnh số 0-9 (small và large)
             for (int i = 0; i < 10; i++) {
@@ -178,7 +179,7 @@ void GameLoop::handleEvents()
     //    // Pause icon during play
     //    if (state == 2)
     //    {
-    //        if (btnPauseIcon.isClicked(mx, my))
+    //        if (iconPauseIcon.isClicked(mx, my))
     //        {
     //            state = 4; // Pause
     //        }
@@ -186,16 +187,16 @@ void GameLoop::handleEvents()
     //    else if (state == 4)
     //    {
     //        // Pause menu: resume / replay / sound
-    //        if (btnResume.isClicked(mx, my))
+    //        if (iconResume.isClicked(mx, my))
     //        {
     //            state = 2;
     //        }
-    //        else if (btnReplay.isClicked(mx, my))
+    //        else if (iconReplay.isClicked(mx, my))
     //        {
     //            resetGame();
     //            state = 2;
     //        }
-    //        else if (btnSound.isClicked(mx, my))
+    //        else if (iconSound.isClicked(mx, my))
     //        {
     //            sound = !sound;
     //            Mix_Volume(-1, sound ? MIX_MAX_VOLUME : 0);
@@ -204,7 +205,7 @@ void GameLoop::handleEvents()
     //    else if (state == 3)
     //    {
     //        // Game over: allow replay by clicking replay button on board
-    //        if (btnReplayEnd.isClicked(mx, my))
+    //        if (iconReplayEnd.isClicked(mx, my))
     //        {
     //            resetGame();
     //            state = 2;
@@ -276,16 +277,23 @@ void GameLoop::renderPlay()
 
     SDL_RenderClear(renderer);
 
-    b.render(renderer);
-    p.render(renderer);
+    score = calculateScore();
+    if (score % 20 < 10) 
+    {
+        b.render(renderer);
+    }
+    else {
+        bNight.render(renderer);
+    }
 
+    p.render(renderer);
     pipes[0].render(renderer);
     pipes[1].render(renderer);
 
-    score = calculateScore();
+    
     renderScore(score, SCREEN_WIDTH / 2, 30, true);
 
-    btnPause.render(renderer);
+    iconPause.render(renderer);
     SDL_RenderPresent(renderer);
 
     frameTime = SDL_GetTicks() - frameStart;
@@ -302,7 +310,15 @@ void GameLoop::renderPause()
     SDL_RenderClear(renderer);
 
     // Draw current game state (background, pipes, player)
-    b.render(renderer);
+    score = calculateScore();
+    if (score % 20 < 10)
+    {
+        b.render(renderer);
+    }
+    else {
+        bNight.render(renderer);
+    }
+
     p.render(renderer);
 
     pipes[0].render(renderer);
@@ -310,10 +326,9 @@ void GameLoop::renderPause()
 
     // Pause overlay and buttons
     menuPauseTab.render(renderer);
-    btnResume.render(renderer);
-    btnSound.render(renderer);
+    iconResume.render(renderer);
+    iconSound.render(renderer);
 
-    score = calculateScore();
     int bestScore = 0;
     {
         std::ifstream fin("asset\\data\\bestScore.txt");
@@ -341,8 +356,15 @@ void GameLoop::renderEnd()
 
     SDL_RenderClear(renderer);
 
-    b.render(renderer);
-    //p.setTexture("asset\\image\\shiba-dark.png", renderer);
+    score = calculateScore();
+    if (score % 20 < 10) 
+    {
+        b.render(renderer);
+    }
+    else {
+        bNight.render(renderer);
+    }
+
     p.render(renderer);
 
     pipes[0].render(renderer);
@@ -350,7 +372,6 @@ void GameLoop::renderEnd()
 
     menuEnd.render(renderer);
 
-    score = calculateScore();
     int bestScore = 0;
     {
         std::ifstream fin("asset\\data\\bestScore.txt");
@@ -372,7 +393,7 @@ void GameLoop::renderEnd()
     renderMedal(score);
 
     // Replay button on game over screen
-    //btnReplayEnd.render(renderer);
+    //iconReplayEnd.render(renderer);
 
     SDL_RenderPresent(renderer);
 

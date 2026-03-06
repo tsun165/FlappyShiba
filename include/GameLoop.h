@@ -58,15 +58,15 @@ private:
 
     // Game state data
     Player p;
-    Background b;
+    Background b, bNight;
     Pipe pipes[2];
     Sound snd;
 
     Menu menuStart, menuEnd;
     Menu menuPauseTab;
-    Menu btnPause;
-    Menu btnResume;
-    Menu btnSound;
+    Menu iconPause;
+    Menu iconResume;
+    Menu iconSound;
 
     TTF_Font* font;
 
