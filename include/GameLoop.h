@@ -99,5 +99,6 @@ private:
     SDL_Texture* medalBronze;
     SDL_Texture* medalSilver;
     SDL_Texture* medalGold;
+    SDL_Surface* gameIcon;
 
 };

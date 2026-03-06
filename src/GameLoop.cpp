@@ -3,13 +3,17 @@
 // Constructor
 GameLoop::GameLoop()
 {
-    window = NULL;
-    renderer = NULL;
+    window = nullptr;
+    renderer = nullptr;
     font = nullptr;
     for (int i = 0; i < 10; i++) {
         digitSmall[i] = nullptr;
         digitLarge[i] = nullptr;
     }
+    medalBronze = nullptr;
+    medalSilver = nullptr;
+    medalGold = nullptr;
+    gameIcon = nullptr;
 
     score = 0;
     gameState = true;
@@ -49,14 +53,22 @@ void GameLoop::initalize()
         return;
     }
     snd.intialize();
-
     window = SDL_CreateWindow("FlappyShiba", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
+
+    if (gameIcon = IMG_Load("asset\\image\\icon.png")) 
+    {
+        SDL_SetWindowIcon(window, gameIcon);
+        SDL_FreeSurface(gameIcon);
+    }
+    else 
+    {
+        SDL_Log("Failed to load icon image: %s", IMG_GetError());
+    }
+    
 
     if (window)
     {
-        renderer = SDL_CreateRenderer(window, -1, 0);
-
-        if (renderer)
+        if (renderer = SDL_CreateRenderer(window, -1, 0))
         {
             gameState = true;
 
