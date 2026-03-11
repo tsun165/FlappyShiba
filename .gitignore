@@ -304,3 +304,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+asset/data/bestScore.txt
